@@ -1,4 +1,4 @@
-Patch build/development instructions are available below the Installation instructions. 
+Patch build/development instructions are available [below](#patch-development). 
 
 <a name="install"></a>
 Patch Installation
@@ -217,11 +217,15 @@ Branch Selection: check master
 
 Destination: Leave defaults or set custom path
 
-Import as general project
+Use the New Project wizard
+
+Android | Android Project from Existing Code
+
+Root Directory: Browse to folder you specified for the destination
 
 
-Configure the external build directory
---------------------------------------
+Configure the jar builder
+-------------------------
 download [7za920.zip](http://sourceforge.net/projects/sevenzip/files/7-Zip/9.20/7za920.zip/download?use_mirror=iweb) and extract 7za.exe to the "build\bin" folder
 
 download and save the the following files to the "build\bin" folder:
@@ -252,18 +256,41 @@ download and save the the following files to the "build\bin" folder:
     cd ..\..\..
 
 
-Configure external build in Eclipse
------------------------------------
+Configure the builder in Eclipse
+--------------------------------
 
-From the Eclipse menu, select Run | External Tools | External Tools Configurations
+From the Eclipse menu, select Project | Properties
 
-From the tree on the left, right click Program and select new
+From the tree on the left, select Builders, click New and select Program
 
 Name: BuildJars
 
-Location: Click Browse Workspace, select build.bat in your "build" folder
+Location: Click Browse Workspace, select builder.bat in your "build" folder
 
 Working Directory: Click Browse Workspace, select your "build" folder
 
+Build options: Run the builder: During manual builds
 
-That's it.  You can now edit the ModUtils.java files in eclipse, as well as the smali files in build\smali\1.1.5.  When you're ready to try out your patches, click Run | External Tools | BuildJars and the jars will automatically be build and copied to you nook and android will be restarted to use the new packages.
+Check Specify working set of relavent resources and click the Specify Resources button
+
+Check the "src" directory and the "build\smali" directory under the NookTouchPatches project
+
+
+Configure the Run action
+------------------------
+
+From the Eclipse menu, select Run | Run Configurations
+
+Right click Android Application and choose "New"
+
+Name: NookTouchPatches
+
+Project: click browse, select NookTouchPatches
+
+Launch Action: Do Nothing
+
+
+Try it out
+----------
+
+You can now edit the ModUtils.java files in eclipse, as well as the smali files in build\smali\1.1.5.  When you're ready to try out your patches, click the run button.  The jars will automatically be built and copied to you nook and android will be restarted to use the new packages.
