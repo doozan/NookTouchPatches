@@ -30,6 +30,22 @@ public class ModUtils {
 	private static final String VERSION 	     = "0.1.0";
 	private static final String TAG              = "NookMod";
 
+	
+	/* 1.2.0 constants */
+	private static final int QUICKNAV_HOME       = 0x102019E;
+	private static final int QUICKNAV_LIBRARY    = 0x102019F;
+	private static final int QUICKNAV_SHOP       = 0x10201A0;
+	private static final int QUICKNAV_SEARCH     = 0x10201A1;
+	private static final int QUICKNAV_SETTINGS   = 0x10201A2;
+	private static final int QUICKNAV_GLOWLIGHT  = 0x10201A3;
+	private static final int STATUSBAR_BACK      = 0x1020221;
+	private static final int STATUSBAR_MENU      = 0x1020222;
+	private static final int STATUSBAR_READNOW   = 0x1020223;
+	private static final int STATUSBAR_NOTIFY    = 0x1020224;
+	private static final int STATUSBAR_GLOWLIGHT = 0x1020226;
+
+	/* 1.1.5 constants */
+	/*
 	private static final int QUICKNAV_HOME       = 0x1020196;
 	private static final int QUICKNAV_LIBRARY    = 0x1020197;
 	private static final int QUICKNAV_SHOP       = 0x1020198;
@@ -41,7 +57,8 @@ public class ModUtils {
 	private static final int STATUSBAR_READNOW   = 0x1020222;
 	private static final int STATUSBAR_NOTIFY    = 0x1020223;
 	private static final int STATUSBAR_GLOWLIGHT = 0x1020225;
-	
+	*/
+
 	public static String getVersion() { return VERSION; }
 
 	private static String getButtonName(int id) {
@@ -283,7 +300,7 @@ public class ModUtils {
 		if(command == null || command.length() == 0)
 			return false;
 
-		Log.v(TAG, "doPackage() " + command );
+		//Log.v(TAG, "doPackage() " + command );
 
 		Intent intent = context.getPackageManager().getLaunchIntentForPackage(command);
 		if (intent == null) {
@@ -332,7 +349,7 @@ public class ModUtils {
 		    return false;
 		}
 		
-		Log.v(TAG, "doKey complete");
+		//Log.v(TAG, "doKey complete");
 		return true;
 	}
 

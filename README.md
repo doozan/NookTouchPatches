@@ -14,11 +14,18 @@ download [patche01.zip](http://geoffair.net/projects/zips/patche01.zip) and unzi
 
 download [7za920.zip](http://sourceforge.net/projects/sevenzip/files/7-Zip/9.20/7za920.zip/download?use_mirror=iweb) and extract 7za.exe to the "nookmods" folder
 
-download and save the the following files to the nookmods folder:
+download and save the following files to the nookmods folder:
 [baksmali](https://smali.googlecode.com/files/baksmali-1.4.0.jar),
-[smali](https://smali.googlecode.com/files/smali-1.4.0.jar),
-[android.policy.patch](https://github.com/doozan/NookTouchPatches/raw/master/patches/1.1.5/android.policy.patch),
+[smali](https://smali.googlecode.com/files/smali-1.4.0.jar)
+
+Download and save the approprate patches to the nookmods folder.
+
+For system 1.1.5, use [android.policy.patch](https://github.com/doozan/NookTouchPatches/raw/master/patches/1.1.5/android.policy.patch) and
 [services.patch](https://github.com/doozan/NookTouchPatches/raw/master/patches/1.1.5/services.patch)
+
+For system 1.2.0, use [android.policy.patch](https://github.com/doozan/NookTouchPatches/raw/master/patches/1.2.0/android.policy.patch) and
+[services.patch](https://github.com/doozan/NookTouchPatches/raw/master/patches/1.2.0/services.patch)
+
 
 
 Decompile, patch, recompile
@@ -234,21 +241,22 @@ download and save the the following files to the "build\bin" folder:
 
 ### Extract and decompile the jars
     cd build
+    set VER=1.1.5
 
-    adb pull /system/framework/android.policy.jar jar/1.1.5/android.policy.orig.jar
-    bin\7za.exe e -ojar\1.1.5\android.policy jar\1.1.5\android.policy.orig.jar
-    java -jar bin\baksmali-1.4.0.jar -o smali/1.1.5/android.policy jar/1.1.5/android.policy.orig.jar
-    cd smali\1.1.5\android.policy
+    adb pull /system/framework/android.policy.jar jar/%VER%/android.policy.orig.jar
+    bin\7za.exe e -ojar\%VER%\android.policy jar\%VER%\android.policy.orig.jar
+    java -jar bin\baksmali-1.4.0.jar -o smali/%VER%/android.policy jar/%VER%/android.policy.orig.jar
+    cd smali\%VER%\android.policy
     git init
     git add *
     git commit -m "Initial commit"
     git tag -a base -m "Original source"
     cd ..\..\..
 
-    adb pull /system/framework/services.jar jar/1.1.5/services.orig.jar
-    bin\7za.exe e -ojar\1.1.5\services jar\1.1.5\services.orig.jar
-    java -jar bin\baksmali-1.4.0.jar -o smali/1.1.5/services jar/1.1.5/services.orig.jar
-    cd smali\1.1.5\services
+    adb pull /system/framework/services.jar jar/%VER%/services.orig.jar
+    bin\7za.exe e -ojar\%VER%\services jar\%VER%\services.orig.jar
+    java -jar bin\baksmali-1.4.0.jar -o smali/%VER%/services jar/%VER%/services.orig.jar
+    cd smali\%VER%\services
     git init
     git add *
     git commit -m "Initial commit"
@@ -268,6 +276,8 @@ Name: BuildJars
 Location: Click Browse Workspace, select builder.bat in your "build" folder
 
 Working Directory: Click Browse Workspace, select your "build" folder
+
+Arguments: The system version you are targeting (ex 1.1.5 or 1.2.0).
 
 Build options: Run the builder: During manual builds
 

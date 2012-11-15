@@ -1,5 +1,8 @@
 @echo off
-SET VER=1.1.5
+
+IF "%1"=="" goto error
+
+SET VER=%1
 SET MAINDIR=%~dp0
 SET CLASSES_DEX=%MAINDIR%\..\bin\classes.dex
 SET SZIP=%MAINDIR%\bin\7za.exe
