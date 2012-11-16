@@ -4,7 +4,7 @@ Patch build/development instructions are available [below](#patch-development).
 Patch Installation
 ==================
 
-The current patches only work with Nook system software 1.1.5 (Glowtouch) but the patches are small and well-documented so it should be possible to port them to other releases.
+The current patches are only compatable with  Nook system software 1.1.5 (Glowtouch) and 1.2.0 (EuroNook).
 
 Configure your build directory
 ------------------------------
@@ -58,7 +58,14 @@ Decompile, patch, recompile
     ..\7za.exe a -mx9 -tzip ..\services.jar *
     cd ..
 
+Installation
+------------
+    adb shell mount -o rw,remount -t ext2 /dev/block/mmcblk0p5 /system
+    adb push android.policy.jar /system/framework/
+    adb push services.jar /system/framework/
+    adb reboot
 
+After your nook reboots, you can install the [Nook Touch Mod Manager](https://github.com/doozan/NookTouchModManager/downloads) to configure the mods.
 
 
 Output from the above commands
@@ -84,14 +91,12 @@ Output from the above commands
 
     D:\nookmod>adb pull /system/framework/android.policy.jar android.policy.orig.jar
 
-    D:\nookmod>java -jar baksmali-1.4.0.jar -o android.policy android.policy.orig.ja
-    r
+    D:\nookmod>java -jar baksmali-1.4.0.jar -o android.policy android.policy.orig.jar
 
     D:\nookmod>patch -p1 < android.policy.patch
     patching file android.policy/com/android/internal/policy/impl/LockScreen.smali
     patching file android.policy/com/android/internal/policy/impl/ModUtils.smali
-    patching file android.policy/com/android/internal/policy/impl/PhoneWindowManager
-    .smali
+    patching file android.policy/com/android/internal/policy/impl/PhoneWindowManager.smali
 
     D:\nookmod>7za.exe e android.policy.orig.jar  -oandroid.policy-bin
 
@@ -110,8 +115,7 @@ Output from the above commands
     Size:       176807
     Compressed: 82207
 
-    D:\nookmod>java -jar smali-1.4.0.jar -o android.policy-bin\classes.dex android.p
-    olicy
+    D:\nookmod>java -jar smali-1.4.0.jar -o android.policy-bin\classes.dex android.policy
 
     D:\nookmod>cd android.policy-bin
 
@@ -240,8 +244,9 @@ download and save the the following files to the "build\bin" folder:
 [smali](https://smali.googlecode.com/files/smali-1.4.0.jar),
 
 ### Extract and decompile the jars
-    cd build
+Export VER to match the platform you're targetting (1.1.5 or 1.2.0)
     set VER=1.1.5
+    cd build
 
     adb pull /system/framework/android.policy.jar jar/%VER%/android.policy.orig.jar
     bin\7za.exe e -ojar\%VER%\android.policy jar\%VER%\android.policy.orig.jar
@@ -303,4 +308,4 @@ Launch Action: Do Nothing
 Try it out
 ----------
 
-You can now edit the ModUtils.java files in eclipse, as well as the smali files in build\smali\1.1.5.  When you're ready to try out your patches, click the run button.  The jars will automatically be built and copied to you nook and android will be restarted to use the new packages.
+You can now edit the ModUtils.java files in eclipse, as well as the smali files in build\smali\<version>.  When you're ready to try out your patches, click the run button.  The jars will automatically be built and copied to you nook and android will be restarted to use the new packages.
