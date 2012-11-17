@@ -113,10 +113,10 @@ index 4817821..b4f42b9 100644
  
 diff --git a/com/android/server/status/ModUtils$1.smali b/com/android/server/status/ModUtils$1.smali
 new file mode 100644
-index 0000000..38f1328
+index 0000000..6973ecb
 --- /dev/null
 +++ b/com/android/server/status/ModUtils$1.smali
-@@ -0,0 +1,86 @@
+@@ -0,0 +1,74 @@
 +.class Lcom/android/server/status/ModUtils$1;
 +.super Ljava/lang/Object;
 +.source "ModUtils.java"
@@ -154,7 +154,7 @@ index 0000000..38f1328
 +
 +    iput-object p2, p0, Lcom/android/server/status/ModUtils$1;->val$action:Ljava/lang/String;
 +
-+    .line 256
++    .line 279
 +    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
 +
 +    return-void
@@ -163,10 +163,10 @@ index 0000000..38f1328
 +
 +# virtual methods
 +.method public run()V
-+    .registers 5
++    .registers 4
 +
 +    .prologue
-+    .line 258
++    .line 281
 +    iget-object v0, p0, Lcom/android/server/status/ModUtils$1;->val$context:Landroid/content/Context;
 +
 +    iget-object v1, p0, Lcom/android/server/status/ModUtils$1;->val$action:Ljava/lang/String;
@@ -185,61 +185,49 @@ index 0000000..38f1328
 +
 +    move-result v1
 +
-+    iget-object v2, p0, Lcom/android/server/status/ModUtils$1;->val$action:Ljava/lang/String;
++    #calls: Lcom/android/server/status/ModUtils;->doKey(Landroid/content/Context;I)Z
++    invoke-static {v0, v1}, Lcom/android/server/status/ModUtils;->access$0(Landroid/content/Context;I)Z
 +
-+    const-string v3, "LONGKEY:"
-+
-+    invoke-virtual {v2, v3}, Ljava/lang/String;->startsWith(Ljava/lang/String;)Z
-+
-+    move-result v2
-+
-+    invoke-static {v2}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
-+
-+    move-result-object v2
-+
-+    #calls: Lcom/android/server/status/ModUtils;->doKey(Landroid/content/Context;ILjava/lang/Boolean;)Z
-+    invoke-static {v0, v1, v2}, Lcom/android/server/status/ModUtils;->access$0(Landroid/content/Context;ILjava/lang/Boolean;)Z
-+
-+    .line 259
++    .line 282
 +    return-void
 +.end method
 diff --git a/com/android/server/status/ModUtils.smali b/com/android/server/status/ModUtils.smali
 new file mode 100644
-index 0000000..007c162
+index 0000000..c49edf3
 --- /dev/null
 +++ b/com/android/server/status/ModUtils.smali
-@@ -0,0 +1,1964 @@
+@@ -0,0 +1,1985 @@
 +.class public Lcom/android/server/status/ModUtils;
 +.super Ljava/lang/Object;
 +.source "ModUtils.java"
 +
 +
 +# static fields
-+.field private static final QUICKNAV_GLOWLIGHT:I = 0x10201a3
++.field private static final QUICKNAV_GLOWLIGHT:I = 0x102019b
 +
-+.field private static final QUICKNAV_HOME:I = 0x102019e
++.field private static final QUICKNAV_HOME:I = 0x1020196
 +
-+.field private static final QUICKNAV_LIBRARY:I = 0x102019f
++.field private static final QUICKNAV_LIBRARY:I = 0x1020197
 +
-+.field private static final QUICKNAV_SEARCH:I = 0x10201a1
++.field private static final QUICKNAV_SEARCH:I = 0x1020199
 +
-+.field private static final QUICKNAV_SETTINGS:I = 0x10201a2
++.field private static final QUICKNAV_SETTINGS:I = 0x102019a
 +
-+.field private static final QUICKNAV_SHOP:I = 0x10201a0
++.field private static final QUICKNAV_SHOP:I = 0x1020198
 +
-+.field private static final STATUSBAR_BACK:I = 0x1020221
++.field private static final STATUSBAR_BACK:I = 0x1020220
 +
-+.field private static final STATUSBAR_GLOWLIGHT:I = 0x1020226
++.field private static final STATUSBAR_GLOWLIGHT:I = 0x1020225
 +
-+.field private static final STATUSBAR_MENU:I = 0x1020222
++.field private static final STATUSBAR_MENU:I = 0x1020221
 +
-+.field private static final STATUSBAR_NOTIFY:I = 0x1020224
++.field private static final STATUSBAR_NOTIFY:I = 0x1020223
 +
-+.field private static final STATUSBAR_READNOW:I = 0x1020223
++.field private static final STATUSBAR_READNOW:I = 0x1020222
 +
 +.field private static final TAG:Ljava/lang/String; = "NookMod"
 +
-+.field private static final VERSION:Ljava/lang/String; = "0.1.0"
++.field private static final VERSION:Ljava/lang/String; = "0.2.0"
 +
 +
 +# direct methods
@@ -351,15 +339,14 @@ index 0000000..007c162
 +    goto :goto_21
 +.end method
 +
-+.method static synthetic access$0(Landroid/content/Context;ILjava/lang/Boolean;)Z
-+    .registers 4
-+    .parameter
++.method static synthetic access$0(Landroid/content/Context;I)Z
++    .registers 3
 +    .parameter
 +    .parameter
 +
 +    .prologue
-+    .line 327
-+    invoke-static {p0, p1, p2}, Lcom/android/server/status/ModUtils;->doKey(Landroid/content/Context;ILjava/lang/Boolean;)Z
++    .line 350
++    invoke-static {p0, p1}, Lcom/android/server/status/ModUtils;->doKey(Landroid/content/Context;I)Z
 +
 +    move-result v0
 +
@@ -456,50 +443,31 @@ index 0000000..007c162
 +    .prologue
 +    const/4 v0, 0x0
 +
-+    .line 242
-+    const-string v1, "NookMod"
-+
-+    new-instance v2, Ljava/lang/StringBuilder;
-+
-+    const-string v3, "doAction()  action = "
-+
-+    invoke-direct {v2, v3}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
-+
-+    invoke-virtual {v2, p1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-+
-+    move-result-object v2
-+
-+    invoke-virtual {v2}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
-+
-+    move-result-object v2
-+
-+    invoke-static {v1, v2}, Landroid/util/Log;->v(Ljava/lang/String;Ljava/lang/String;)I
-+
-+    .line 243
-+    if-eqz p1, :cond_1d
++    .line 266
++    if-eqz p1, :cond_9
 +
 +    invoke-virtual {p1}, Ljava/lang/String;->length()I
 +
 +    move-result v1
 +
-+    if-nez v1, :cond_1e
++    if-nez v1, :cond_a
 +
-+    .line 271
-+    :cond_1d
-+    :goto_1d
++    .line 294
++    :cond_9
++    :goto_9
 +    return v0
 +
-+    .line 246
-+    :cond_1e
++    .line 269
++    :cond_a
 +    const-string v1, "PACKAGE:"
 +
 +    invoke-virtual {p1, v1}, Ljava/lang/String;->startsWith(Ljava/lang/String;)Z
 +
 +    move-result v1
 +
-+    if-eqz v1, :cond_35
++    if-eqz v1, :cond_21
 +
-+    .line 247
++    .line 270
 +    const-string v0, "PACKAGE:"
 +
 +    invoke-virtual {v0}, Ljava/lang/String;->length()I
@@ -514,19 +482,19 @@ index 0000000..007c162
 +
 +    move-result v0
 +
-+    goto :goto_1d
++    goto :goto_9
 +
-+    .line 249
-+    :cond_35
++    .line 272
++    :cond_21
 +    const-string v1, "ACTIVITY:"
 +
 +    invoke-virtual {p1, v1}, Ljava/lang/String;->startsWith(Ljava/lang/String;)Z
 +
 +    move-result v1
 +
-+    if-eqz v1, :cond_4c
++    if-eqz v1, :cond_38
 +
-+    .line 250
++    .line 273
 +    const-string v0, "ACTIVITY:"
 +
 +    invoke-virtual {v0}, Ljava/lang/String;->length()I
@@ -541,19 +509,19 @@ index 0000000..007c162
 +
 +    move-result v0
 +
-+    goto :goto_1d
++    goto :goto_9
 +
-+    .line 252
-+    :cond_4c
++    .line 275
++    :cond_38
 +    const-string v1, "BROADCAST:"
 +
 +    invoke-virtual {p1, v1}, Ljava/lang/String;->startsWith(Ljava/lang/String;)Z
 +
 +    move-result v1
 +
-+    if-eqz v1, :cond_63
++    if-eqz v1, :cond_4f
 +
-+    .line 253
++    .line 276
 +    const-string v0, "BROADCAST:"
 +
 +    invoke-virtual {v0}, Ljava/lang/String;->length()I
@@ -568,28 +536,19 @@ index 0000000..007c162
 +
 +    move-result v0
 +
-+    goto :goto_1d
++    goto :goto_9
 +
-+    .line 255
-+    :cond_63
++    .line 278
++    :cond_4f
 +    const-string v1, "KEY:"
 +
 +    invoke-virtual {p1, v1}, Ljava/lang/String;->startsWith(Ljava/lang/String;)Z
 +
 +    move-result v1
 +
-+    if-nez v1, :cond_73
++    if-eqz v1, :cond_66
 +
-+    const-string v1, "LONGKEY:"
-+
-+    invoke-virtual {p1, v1}, Ljava/lang/String;->startsWith(Ljava/lang/String;)Z
-+
-+    move-result v1
-+
-+    if-eqz v1, :cond_82
-+
-+    .line 256
-+    :cond_73
++    .line 279
 +    new-instance v0, Ljava/lang/Thread;
 +
 +    new-instance v1, Lcom/android/server/status/ModUtils$1;
@@ -598,50 +557,50 @@ index 0000000..007c162
 +
 +    invoke-direct {v0, v1}, Ljava/lang/Thread;-><init>(Ljava/lang/Runnable;)V
 +
-+    .line 260
++    .line 283
 +    invoke-virtual {v0}, Ljava/lang/Thread;->start()V
 +
-+    .line 261
++    .line 284
 +    const/4 v0, 0x1
 +
-+    goto :goto_1d
++    goto :goto_9
 +
-+    .line 264
-+    :cond_82
++    .line 287
++    :cond_66
 +    const-string v1, "QUICKNAV"
 +
 +    invoke-virtual {p1, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
 +
 +    move-result v1
 +
-+    if-eqz v1, :cond_8f
++    if-eqz v1, :cond_73
 +
-+    .line 265
++    .line 288
 +    invoke-static {p0}, Lcom/android/server/status/ModUtils;->doToggleQuicknav(Landroid/content/Context;)Z
 +
 +    move-result v0
 +
-+    goto :goto_1d
++    goto :goto_9
 +
-+    .line 267
-+    :cond_8f
++    .line 290
++    :cond_73
 +    const-string v1, "GLOWLIGHT"
 +
 +    invoke-virtual {p1, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
 +
 +    move-result v1
 +
-+    if-eqz v1, :cond_9c
++    if-eqz v1, :cond_80
 +
-+    .line 268
++    .line 291
 +    invoke-static {p0}, Lcom/android/server/status/ModUtils;->doToggleGlowlight(Landroid/content/Context;)Z
 +
 +    move-result v0
 +
-+    goto :goto_1d
++    goto :goto_9
 +
-+    .line 270
-+    :cond_9c
++    .line 293
++    :cond_80
 +    const-string v1, "NookMod"
 +
 +    new-instance v2, Ljava/lang/StringBuilder;
@@ -660,7 +619,7 @@ index 0000000..007c162
 +
 +    invoke-static {v1, v2}, Landroid/util/Log;->v(Ljava/lang/String;Ljava/lang/String;)I
 +
-+    goto/16 :goto_1d
++    goto/16 :goto_9
 +.end method
 +
 +.method private static doActivity(Landroid/content/Context;Ljava/lang/String;)Z
@@ -669,7 +628,7 @@ index 0000000..007c162
 +    .parameter "command"
 +
 +    .prologue
-+    .line 312
++    .line 335
 +    if-eqz p1, :cond_8
 +
 +    invoke-virtual {p1}, Ljava/lang/String;->length()I
@@ -678,15 +637,15 @@ index 0000000..007c162
 +
 +    if-nez v0, :cond_a
 +
-+    .line 313
++    .line 336
 +    :cond_8
 +    const/4 v0, 0x0
 +
-+    .line 316
++    .line 339
 +    :goto_9
 +    return v0
 +
-+    .line 315
++    .line 338
 +    :cond_a
 +    invoke-static {p1}, Lcom/android/server/status/ModUtils;->getIntentFromString(Ljava/lang/String;)Landroid/content/Intent;
 +
@@ -694,7 +653,7 @@ index 0000000..007c162
 +
 +    invoke-virtual {p0, v0}, Landroid/content/Context;->startActivity(Landroid/content/Intent;)V
 +
-+    .line 316
++    .line 339
 +    const/4 v0, 0x1
 +
 +    goto :goto_9
@@ -706,7 +665,7 @@ index 0000000..007c162
 +    .parameter "command"
 +
 +    .prologue
-+    .line 320
++    .line 343
 +    if-eqz p1, :cond_8
 +
 +    invoke-virtual {p1}, Ljava/lang/String;->length()I
@@ -715,15 +674,15 @@ index 0000000..007c162
 +
 +    if-nez v0, :cond_a
 +
-+    .line 321
++    .line 344
 +    :cond_8
 +    const/4 v0, 0x0
 +
-+    .line 324
++    .line 347
 +    :goto_9
 +    return v0
 +
-+    .line 323
++    .line 346
 +    :cond_a
 +    invoke-static {p1}, Lcom/android/server/status/ModUtils;->getIntentFromString(Ljava/lang/String;)Landroid/content/Intent;
 +
@@ -731,31 +690,30 @@ index 0000000..007c162
 +
 +    invoke-virtual {p0, v0}, Landroid/content/Context;->sendBroadcast(Landroid/content/Intent;)V
 +
-+    .line 324
++    .line 347
 +    const/4 v0, 0x1
 +
 +    goto :goto_9
 +.end method
 +
-+.method private static doKey(Landroid/content/Context;ILjava/lang/Boolean;)Z
-+    .registers 14
++.method private static doKey(Landroid/content/Context;I)Z
++    .registers 13
 +    .parameter "context"
 +    .parameter "keycode"
-+    .parameter "longpress"
 +
 +    .prologue
 +    const/4 v5, 0x1
 +
 +    const/4 v4, 0x0
 +
-+    .line 328
++    .line 351
 +    if-gtz p1, :cond_5
 +
-+    .line 350
++    .line 373
 +    :goto_4
 +    return v4
 +
-+    .line 337
++    .line 360
 +    :cond_5
 +    :try_start_5
 +    const-string v6, "android.os.ServiceManager"
@@ -798,7 +756,7 @@ index 0000000..007c162
 +
 +    check-cast v3, Landroid/os/IBinder;
 +
-+    .line 339
++    .line 362
 +    .local v3, wmbinder:Landroid/os/IBinder;
 +    const-string v6, "android.view.IWindowManager$Stub"
 +
@@ -836,7 +794,7 @@ index 0000000..007c162
 +
 +    move-result-object v2
 +
-+    .line 340
++    .line 363
 +    .local v2, windowman:Ljava/lang/Object;
 +    const-string v6, "android.view.IWindowManager"
 +
@@ -866,7 +824,7 @@ index 0000000..007c162
 +
 +    move-result-object v1
 +
-+    .line 342
++    .line 365
 +    .local v1, injectKeyEvent:Ljava/lang/reflect/Method;
 +    const/4 v6, 0x2
 +
@@ -894,7 +852,7 @@ index 0000000..007c162
 +
 +    invoke-virtual {v1, v2, v6}, Ljava/lang/reflect/Method;->invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;
 +
-+    .line 343
++    .line 366
 +    const/4 v6, 0x2
 +
 +    new-array v6, v6, [Ljava/lang/Object;
@@ -921,28 +879,21 @@ index 0000000..007c162
 +
 +    invoke-virtual {v1, v2, v6}, Ljava/lang/reflect/Method;->invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;
 +    :try_end_8e
-+    .catch Ljava/lang/Exception; {:try_start_5 .. :try_end_8e} :catch_98
-+
-+    .line 349
-+    const-string v4, "NookMod"
-+
-+    const-string v6, "doKey complete"
-+
-+    invoke-static {v4, v6}, Landroid/util/Log;->v(Ljava/lang/String;Ljava/lang/String;)I
++    .catch Ljava/lang/Exception; {:try_start_5 .. :try_end_8e} :catch_91
 +
 +    move v4, v5
 +
-+    .line 350
++    .line 373
 +    goto/16 :goto_4
 +
-+    .line 344
++    .line 367
 +    .end local v1           #injectKeyEvent:Ljava/lang/reflect/Method;
 +    .end local v2           #windowman:Ljava/lang/Object;
 +    .end local v3           #wmbinder:Landroid/os/IBinder;
-+    :catch_98
++    :catch_91
 +    move-exception v0
 +
-+    .line 345
++    .line 368
 +    .local v0, e:Ljava/lang/Exception;
 +    const-string v5, "NookMod"
 +
@@ -961,7 +912,7 @@ index 0000000..007c162
 +    .prologue
 +    const/4 v1, 0x0
 +
-+    .line 297
++    .line 320
 +    if-eqz p1, :cond_9
 +
 +    invoke-virtual {p1}, Ljava/lang/String;->length()I
@@ -970,32 +921,13 @@ index 0000000..007c162
 +
 +    if-nez v2, :cond_a
 +
-+    .line 308
++    .line 331
 +    :cond_9
 +    :goto_9
 +    return v1
 +
-+    .line 300
++    .line 325
 +    :cond_a
-+    const-string v2, "NookMod"
-+
-+    new-instance v3, Ljava/lang/StringBuilder;
-+
-+    const-string v4, "doPackage() "
-+
-+    invoke-direct {v3, v4}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
-+
-+    invoke-virtual {v3, p1}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-+
-+    move-result-object v3
-+
-+    invoke-virtual {v3}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
-+
-+    move-result-object v3
-+
-+    invoke-static {v2, v3}, Landroid/util/Log;->v(Ljava/lang/String;Ljava/lang/String;)I
-+
-+    .line 302
 +    invoke-virtual {p0}, Landroid/content/Context;->getPackageManager()Landroid/content/pm/PackageManager;
 +
 +    move-result-object v2
@@ -1004,11 +936,11 @@ index 0000000..007c162
 +
 +    move-result-object v0
 +
-+    .line 303
++    .line 326
 +    .local v0, intent:Landroid/content/Intent;
-+    if-nez v0, :cond_3d
++    if-nez v0, :cond_29
 +
-+    .line 304
++    .line 327
 +    const-string v2, "NookMod"
 +
 +    new-instance v3, Ljava/lang/StringBuilder;
@@ -1029,11 +961,11 @@ index 0000000..007c162
 +
 +    goto :goto_9
 +
-+    .line 307
-+    :cond_3d
++    .line 330
++    :cond_29
 +    invoke-virtual {p0, v0}, Landroid/content/Context;->startActivity(Landroid/content/Intent;)V
 +
-+    .line 308
++    .line 331
 +    const/4 v1, 0x1
 +
 +    goto :goto_9
@@ -1048,12 +980,12 @@ index 0000000..007c162
 +
 +    const/4 v4, 0x0
 +
-+    .line 367
++    .line 390
 +    invoke-static {}, Lcom/android/internal/policy/impl/ModUtils;->getContext()Lcom/android/internal/policy/impl/PhoneWindowManager;
 +
 +    move-result-object v2
 +
-+    .line 369
++    .line 392
 +    .local v2, wms:Lcom/android/internal/policy/impl/PhoneWindowManager;
 +    :try_start_6
 +    const-string v5, "com.android.internal.policy.impl.PhoneWindowManager"
@@ -1072,13 +1004,13 @@ index 0000000..007c162
 +
 +    move-result-object v1
 +
-+    .line 370
++    .line 393
 +    .local v1, toggleLights:Ljava/lang/reflect/Method;
 +    const/4 v5, 0x1
 +
 +    invoke-virtual {v1, v5}, Ljava/lang/reflect/Method;->setAccessible(Z)V
 +
-+    .line 371
++    .line 394
 +    const/4 v5, 0x0
 +
 +    new-array v5, v5, [Ljava/lang/Object;
@@ -1087,16 +1019,16 @@ index 0000000..007c162
 +    :try_end_1f
 +    .catch Ljava/lang/Exception; {:try_start_6 .. :try_end_1f} :catch_20
 +
-+    .line 376
++    .line 399
 +    .end local v1           #toggleLights:Ljava/lang/reflect/Method;
 +    :goto_1f
 +    return v3
 +
-+    .line 372
++    .line 395
 +    :catch_20
 +    move-exception v0
 +
-+    .line 373
++    .line 396
 +    .local v0, e:Ljava/lang/Exception;
 +    const-string v3, "NookMod"
 +
@@ -1136,7 +1068,7 @@ index 0000000..007c162
 +
 +    move v3, v4
 +
-+    .line 374
++    .line 397
 +    goto :goto_1f
 +.end method
 +
@@ -1147,14 +1079,14 @@ index 0000000..007c162
 +    .prologue
 +    const/4 v2, 0x0
 +
-+    .line 354
++    .line 377
 +    const-string v3, "statusbar"
 +
 +    invoke-virtual {p0, v3}, Landroid/content/Context;->getSystemService(Ljava/lang/String;)Ljava/lang/Object;
 +
 +    move-result-object v1
 +
-+    .line 357
++    .line 380
 +    .local v1, statusbar:Ljava/lang/Object;
 +    :try_start_7
 +    const-string v3, "android.app.StatusBarManager"
@@ -1181,17 +1113,17 @@ index 0000000..007c162
 +    :try_end_1c
 +    .catch Ljava/lang/Exception; {:try_start_7 .. :try_end_1c} :catch_1e
 +
-+    .line 362
++    .line 385
 +    const/4 v2, 0x1
 +
 +    :goto_1d
 +    return v2
 +
-+    .line 358
++    .line 381
 +    :catch_1e
 +    move-exception v0
 +
-+    .line 360
++    .line 383
 +    .local v0, e:Ljava/lang/Exception;
 +    goto :goto_1d
 +.end method
@@ -1204,7 +1136,7 @@ index 0000000..007c162
 +    .prologue
 +    const/4 v6, 0x0
 +
-+    .line 201
++    .line 224
 +    if-eqz p1, :cond_9
 +
 +    invoke-virtual {p1}, Ljava/lang/String;->length()I
@@ -1213,18 +1145,18 @@ index 0000000..007c162
 +
 +    if-nez v7, :cond_a
 +
-+    .line 226
++    .line 249
 +    :cond_9
 +    :goto_9
 +    return-object v6
 +
-+    .line 204
++    .line 227
 +    :cond_a
 +    invoke-virtual {p0}, Landroid/content/Context;->getContentResolver()Landroid/content/ContentResolver;
 +
 +    move-result-object v5
 +
-+    .line 205
++    .line 228
 +    .local v5, resolver:Landroid/content/ContentResolver;
 +    new-instance v7, Ljava/lang/StringBuilder;
 +
@@ -1250,7 +1182,7 @@ index 0000000..007c162
 +
 +    move-result-object v0
 +
-+    .line 209
++    .line 232
 +    .local v0, bitmapId:Ljava/lang/String;
 +    if-eqz v0, :cond_9
 +
@@ -1260,7 +1192,7 @@ index 0000000..007c162
 +
 +    if-eqz v7, :cond_9
 +
-+    .line 212
++    .line 235
 +    const-string v7, "^\\d+$"
 +
 +    invoke-virtual {v0, v7}, Ljava/lang/String;->matches(Ljava/lang/String;)Z
@@ -1269,12 +1201,12 @@ index 0000000..007c162
 +
 +    if-eqz v7, :cond_44
 +
-+    .line 214
++    .line 237
 +    invoke-virtual {p0}, Landroid/content/Context;->getResources()Landroid/content/res/Resources;
 +
 +    move-result-object v4
 +
-+    .line 215
++    .line 238
 +    .local v4, res:Landroid/content/res/Resources;
 +    invoke-static {v0}, Ljava/lang/Integer;->parseInt(Ljava/lang/String;)I
 +
@@ -1286,14 +1218,14 @@ index 0000000..007c162
 +
 +    goto :goto_9
 +
-+    .line 218
++    .line 241
 +    .end local v4           #res:Landroid/content/res/Resources;
 +    :cond_44
 +    invoke-virtual {p0}, Landroid/content/Context;->getPackageManager()Landroid/content/pm/PackageManager;
 +
 +    move-result-object v3
 +
-+    .line 221
++    .line 244
 +    .local v3, pm:Landroid/content/pm/PackageManager;
 +    :try_start_48
 +    invoke-virtual {v3, v0}, Landroid/content/pm/PackageManager;->getApplicationIcon(Ljava/lang/String;)Landroid/graphics/drawable/Drawable;
@@ -1302,7 +1234,7 @@ index 0000000..007c162
 +
 +    move-result-object v2
 +
-+    .line 226
++    .line 249
 +    .local v2, icon:Landroid/graphics/drawable/Drawable;
 +    check-cast v2, Landroid/graphics/drawable/BitmapDrawable;
 +
@@ -1313,11 +1245,11 @@ index 0000000..007c162
 +
 +    goto :goto_9
 +
-+    .line 222
++    .line 245
 +    :catch_53
 +    move-exception v1
 +
-+    .line 223
++    .line 246
 +    .local v1, e:Landroid/content/pm/PackageManager$NameNotFoundException;
 +    goto :goto_9
 +.end method
@@ -1328,7 +1260,7 @@ index 0000000..007c162
 +    .parameter "buttonName"
 +
 +    .prologue
-+    .line 231
++    .line 254
 +    if-eqz p1, :cond_8
 +
 +    invoke-virtual {p1}, Ljava/lang/String;->length()I
@@ -1337,21 +1269,21 @@ index 0000000..007c162
 +
 +    if-nez v1, :cond_a
 +
-+    .line 232
++    .line 255
 +    :cond_8
 +    const/4 v1, 0x0
 +
-+    .line 235
++    .line 258
 +    :goto_9
 +    return-object v1
 +
-+    .line 234
++    .line 257
 +    :cond_a
 +    invoke-virtual {p0}, Landroid/content/Context;->getContentResolver()Landroid/content/ContentResolver;
 +
 +    move-result-object v0
 +
-+    .line 235
++    .line 258
 +    .local v0, resolver:Landroid/content/ContentResolver;
 +    new-instance v1, Ljava/lang/StringBuilder;
 +
@@ -1463,17 +1395,17 @@ index 0000000..007c162
 +    .line 62
 +    :sswitch_data_26
 +    .sparse-switch
-+        0x102019e -> :sswitch_5
-+        0x102019f -> :sswitch_8
-+        0x10201a0 -> :sswitch_b
-+        0x10201a1 -> :sswitch_e
-+        0x10201a2 -> :sswitch_11
-+        0x10201a3 -> :sswitch_14
-+        0x1020221 -> :sswitch_17
-+        0x1020222 -> :sswitch_1a
-+        0x1020223 -> :sswitch_1d
-+        0x1020224 -> :sswitch_20
-+        0x1020226 -> :sswitch_23
++        0x1020196 -> :sswitch_5
++        0x1020197 -> :sswitch_8
++        0x1020198 -> :sswitch_b
++        0x1020199 -> :sswitch_e
++        0x102019a -> :sswitch_11
++        0x102019b -> :sswitch_14
++        0x1020220 -> :sswitch_17
++        0x1020221 -> :sswitch_1a
++        0x1020222 -> :sswitch_1d
++        0x1020223 -> :sswitch_20
++        0x1020225 -> :sswitch_23
 +    .end sparse-switch
 +.end method
 +
@@ -1488,14 +1420,14 @@ index 0000000..007c162
 +
 +    const/4 v6, 0x0
 +
-+    .line 275
++    .line 298
 +    const-string v3, ";"
 +
 +    invoke-virtual {p0, v3}, Ljava/lang/String;->split(Ljava/lang/String;)[Ljava/lang/String;
 +
 +    move-result-object v0
 +
-+    .line 276
++    .line 299
 +    .local v0, chunk:[Ljava/lang/String;
 +    new-instance v2, Landroid/content/Intent;
 +
@@ -1503,7 +1435,7 @@ index 0000000..007c162
 +
 +    invoke-direct {v2, v3}, Landroid/content/Intent;-><init>(Ljava/lang/String;)V
 +
-+    .line 277
++    .line 300
 +    .local v2, intent:Landroid/content/Intent;
 +    const-string v3, "NookMod"
 +
@@ -1525,7 +1457,7 @@ index 0000000..007c162
 +
 +    invoke-static {v3, v4}, Landroid/util/Log;->v(Ljava/lang/String;Ljava/lang/String;)I
 +
-+    .line 279
++    .line 302
 +    const/4 v1, 0x1
 +
 +    .local v1, i:I
@@ -1534,10 +1466,10 @@ index 0000000..007c162
 +
 +    if-lt v1, v3, :cond_2c
 +
-+    .line 293
++    .line 316
 +    return-object v2
 +
-+    .line 281
++    .line 304
 +    :cond_2c
 +    aget-object v3, v0, v1
 +
@@ -1549,7 +1481,7 @@ index 0000000..007c162
 +
 +    if-eqz v3, :cond_59
 +
-+    .line 283
++    .line 306
 +    const-string v3, "NookMod"
 +
 +    new-instance v4, Ljava/lang/StringBuilder;
@@ -1574,7 +1506,7 @@ index 0000000..007c162
 +
 +    invoke-static {v3, v4}, Landroid/util/Log;->v(Ljava/lang/String;Ljava/lang/String;)I
 +
-+    .line 284
++    .line 307
 +    aget-object v3, v0, v1
 +
 +    invoke-virtual {v3, v8}, Ljava/lang/String;->substring(I)Ljava/lang/String;
@@ -1583,7 +1515,7 @@ index 0000000..007c162
 +
 +    invoke-virtual {v2, v3}, Landroid/content/Intent;->addCategory(Ljava/lang/String;)Landroid/content/Intent;
 +
-+    .line 287
++    .line 310
 +    :cond_59
 +    aget-object v3, v0, v1
 +
@@ -1595,7 +1527,7 @@ index 0000000..007c162
 +
 +    if-eqz v3, :cond_8a
 +
-+    .line 289
++    .line 312
 +    const-string v3, "NookMod"
 +
 +    new-instance v4, Ljava/lang/StringBuilder;
@@ -1620,7 +1552,7 @@ index 0000000..007c162
 +
 +    invoke-static {v3, v4}, Landroid/util/Log;->v(Ljava/lang/String;Ljava/lang/String;)I
 +
-+    .line 290
++    .line 313
 +    aget-object v3, v0, v1
 +
 +    invoke-virtual {v3, v7}, Ljava/lang/String;->substring(I)Ljava/lang/String;
@@ -1633,7 +1565,7 @@ index 0000000..007c162
 +
 +    invoke-virtual {v2, v3}, Landroid/content/Intent;->setFlags(I)Landroid/content/Intent;
 +
-+    .line 279
++    .line 302
 +    :cond_8a
 +    add-int/lit8 v1, v1, 0x1
 +
@@ -1645,9 +1577,105 @@ index 0000000..007c162
 +
 +    .prologue
 +    .line 59
-+    const-string v0, "0.1.0"
++    const-string v0, "0.2.0"
 +
 +    return-object v0
++.end method
++
++.method public static onScreenResume(Landroid/content/Context;)V
++    .registers 3
++    .parameter "context"
++
++    .prologue
++    .line 129
++    invoke-virtual {p0}, Landroid/content/Context;->getContentResolver()Landroid/content/ContentResolver;
++
++    move-result-object v0
++
++    .line 131
++    .local v0, resolver:Landroid/content/ContentResolver;
++    :try_start_4
++    const-string v1, "mod.option.restore_glowlight_on_wake"
++
++    invoke-static {v0, v1}, Landroid/provider/Settings$System;->getInt(Landroid/content/ContentResolver;Ljava/lang/String;)I
++
++    move-result v1
++
++    if-lez v1, :cond_17
++
++    .line 132
++    const-string v1, "mod.misc.wake_screen_brightness_mode"
++
++    invoke-static {v0, v1}, Landroid/provider/Settings$System;->getInt(Landroid/content/ContentResolver;Ljava/lang/String;)I
++
++    move-result v1
++
++    if-lez v1, :cond_17
++
++    .line 133
++    invoke-static {p0}, Lcom/android/server/status/ModUtils;->doToggleGlowlight(Landroid/content/Context;)Z
++    :try_end_17
++    .catch Landroid/provider/Settings$SettingNotFoundException; {:try_start_4 .. :try_end_17} :catch_18
++
++    .line 136
++    :cond_17
++    :goto_17
++    return-void
++
++    .line 134
++    :catch_18
++    move-exception v1
++
++    goto :goto_17
++.end method
++
++.method public static onScreenSleep(Landroid/content/Context;)V
++    .registers 4
++    .parameter "context"
++
++    .prologue
++    .line 116
++    invoke-virtual {p0}, Landroid/content/Context;->getContentResolver()Landroid/content/ContentResolver;
++
++    move-result-object v1
++
++    .line 118
++    .local v1, resolver:Landroid/content/ContentResolver;
++    :try_start_4
++    const-string v2, "mod.option.restore_glowlight_on_wake"
++
++    invoke-static {v1, v2}, Landroid/provider/Settings$System;->getInt(Landroid/content/ContentResolver;Ljava/lang/String;)I
++
++    move-result v2
++
++    if-lez v2, :cond_17
++
++    .line 119
++    const-string v2, "screen_brightness_mode"
++
++    invoke-static {v1, v2}, Landroid/provider/Settings$System;->getString(Landroid/content/ContentResolver;Ljava/lang/String;)Ljava/lang/String;
++
++    move-result-object v0
++
++    .line 120
++    .local v0, lightStatus:Ljava/lang/String;
++    const-string v2, "mod.misc.wake_screen_brightness_mode"
++
++    invoke-static {v1, v2, v0}, Landroid/provider/Settings$System;->putString(Landroid/content/ContentResolver;Ljava/lang/String;Ljava/lang/String;)Z
++    :try_end_17
++    .catch Landroid/provider/Settings$SettingNotFoundException; {:try_start_4 .. :try_end_17} :catch_18
++
++    .line 125
++    .end local v0           #lightStatus:Ljava/lang/String;
++    :cond_17
++    :goto_17
++    return-void
++
++    .line 123
++    :catch_18
++    move-exception v2
++
++    goto :goto_17
 +.end method
 +
 +.method public static overrideShopButton(Landroid/content/Context;)Ljava/lang/Boolean;
@@ -1655,7 +1683,7 @@ index 0000000..007c162
 +    .parameter "context"
 +
 +    .prologue
-+    .line 117
++    .line 140
 +    const-string v0, "QUICKNAV_SHOP"
 +
 +    invoke-static {p0, v0}, Lcom/android/server/status/ModUtils;->getButtonBitmap(Landroid/content/Context;Ljava/lang/String;)Landroid/graphics/Bitmap;
@@ -1694,7 +1722,7 @@ index 0000000..007c162
 +    .end annotation
 +
 +    .prologue
-+    .line 122
++    .line 145
 +    if-eqz p1, :cond_8
 +
 +    invoke-virtual/range {p1 .. p1}, Landroid/widget/ImageView;->getId()I
@@ -1703,12 +1731,12 @@ index 0000000..007c162
 +
 +    if-nez v3, :cond_9
 +
-+    .line 197
++    .line 220
 +    :cond_8
 +    :goto_8
 +    return-void
 +
-+    .line 125
++    .line 148
 +    :cond_9
 +    invoke-virtual/range {p1 .. p1}, Landroid/widget/ImageView;->getId()I
 +
@@ -1718,7 +1746,7 @@ index 0000000..007c162
 +
 +    move-result-object v11
 +
-+    .line 126
++    .line 149
 +    .local v11, buttonName:Ljava/lang/String;
 +    if-eqz v11, :cond_8
 +
@@ -1728,33 +1756,14 @@ index 0000000..007c162
 +
 +    if-eqz v3, :cond_8
 +
-+    .line 129
-+    const-string v3, "NookMod"
-+
-+    new-instance v4, Ljava/lang/StringBuilder;
-+
-+    const-string v5, "replaceQuicknavIcon() button = "
-+
-+    invoke-direct {v4, v5}, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V
-+
-+    invoke-virtual {v4, v11}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-+
-+    move-result-object v4
-+
-+    invoke-virtual {v4}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
-+
-+    move-result-object v4
-+
-+    invoke-static {v3, v4}, Landroid/util/Log;->v(Ljava/lang/String;Ljava/lang/String;)I
-+
-+    .line 131
++    .line 154
 +    move-object/from16 v0, p0
 +
 +    invoke-static {v0, v11}, Lcom/android/server/status/ModUtils;->getButtonBitmap(Landroid/content/Context;Ljava/lang/String;)Landroid/graphics/Bitmap;
 +
 +    move-result-object v16
 +
-+    .line 132
++    .line 155
 +    .local v16, icon:Landroid/graphics/Bitmap;
 +    move-object/from16 v0, p0
 +
@@ -1762,21 +1771,21 @@ index 0000000..007c162
 +
 +    move-result-object v17
 +
-+    .line 134
++    .line 157
 +    .local v17, iconLabel:Ljava/lang/String;
-+    if-eqz v17, :cond_41
++    if-eqz v17, :cond_2d
 +
 +    invoke-virtual/range {v17 .. v17}, Ljava/lang/String;->length()I
 +
 +    move-result v3
 +
-+    if-nez v3, :cond_43
++    if-nez v3, :cond_2f
 +
-+    :cond_41
++    :cond_2d
 +    if-eqz v16, :cond_8
 +
-+    .line 137
-+    :cond_43
++    .line 160
++    :cond_2f
 +    const-string v3, "window"
 +
 +    move-object/from16 v0, p0
@@ -1787,19 +1796,19 @@ index 0000000..007c162
 +
 +    check-cast v27, Landroid/view/WindowManager;
 +
-+    .line 138
++    .line 161
 +    .local v27, wm:Landroid/view/WindowManager;
 +    invoke-interface/range {v27 .. v27}, Landroid/view/WindowManager;->getDefaultDisplay()Landroid/view/Display;
 +
 +    move-result-object v13
 +
-+    .line 140
++    .line 163
 +    .local v13, display:Landroid/view/Display;
 +    invoke-virtual/range {p0 .. p0}, Landroid/content/Context;->getContentResolver()Landroid/content/ContentResolver;
 +
 +    move-result-object v25
 +
-+    .line 141
++    .line 164
 +    .local v25, resolver:Landroid/content/ContentResolver;
 +    const-string v3, "has_glowlight"
 +
@@ -1813,80 +1822,80 @@ index 0000000..007c162
 +
 +    move-result v3
 +
-+    if-lez v3, :cond_13f
++    if-lez v3, :cond_12b
 +
 +    const/4 v8, 0x1
 +
-+    .line 142
++    .line 165
 +    .local v8, bHasGlowlight:Z
-+    :goto_64
-+    if-eqz v8, :cond_142
++    :goto_50
++    if-eqz v8, :cond_12e
 +
 +    const/4 v9, 0x6
 +
-+    .line 143
++    .line 166
 +    .local v9, buttonCount:I
-+    :goto_67
++    :goto_53
 +    invoke-virtual {v13}, Landroid/view/Display;->getWidth()I
 +
 +    move-result v3
 +
 +    div-int v12, v3, v9
 +
-+    .line 144
++    .line 167
 +    .local v12, buttonWidth:I
 +    const/16 v10, 0x70
 +
-+    .line 146
++    .line 169
 +    .local v10, buttonHeight:I
 +    const/16 v19, 0x56
 +
-+    .line 147
++    .line 170
 +    .local v19, labelOffsetY:I
 +    const/16 v18, 0x60
 +
-+    .line 149
++    .line 172
 +    .local v18, iconOffsetY:I
 +    new-instance v2, Landroid/graphics/Canvas;
 +
 +    invoke-direct {v2}, Landroid/graphics/Canvas;-><init>()V
 +
-+    .line 150
++    .line 173
 +    .local v2, canvas:Landroid/graphics/Canvas;
 +    new-instance v7, Landroid/graphics/Paint;
 +
 +    invoke-direct {v7}, Landroid/graphics/Paint;-><init>()V
 +
-+    .line 151
++    .line 174
 +    .local v7, paint:Landroid/graphics/Paint;
 +    const/high16 v3, -0x100
 +
 +    invoke-virtual {v7, v3}, Landroid/graphics/Paint;->setColor(I)V
 +
-+    .line 153
++    .line 176
 +    sget-object v3, Landroid/graphics/Bitmap$Config;->RGB_565:Landroid/graphics/Bitmap$Config;
 +
 +    invoke-static {v12, v10, v3}, Landroid/graphics/Bitmap;->createBitmap(IILandroid/graphics/Bitmap$Config;)Landroid/graphics/Bitmap;
 +
 +    move-result-object v22
 +
-+    .line 154
++    .line 177
 +    .local v22, newBitmap:Landroid/graphics/Bitmap;
 +    move-object/from16 v0, v22
 +
 +    invoke-virtual {v2, v0}, Landroid/graphics/Canvas;->setBitmap(Landroid/graphics/Bitmap;)V
 +
-+    .line 156
++    .line 179
 +    const/4 v3, -0x1
 +
 +    invoke-virtual {v2, v3}, Landroid/graphics/Canvas;->drawColor(I)V
 +
-+    .line 158
++    .line 181
 +    const/high16 v3, 0x4140
 +
 +    invoke-virtual {v7, v3}, Landroid/graphics/Paint;->setStrokeWidth(F)V
 +
-+    .line 159
++    .line 182
 +    const/4 v3, 0x0
 +
 +    const/4 v4, 0x0
@@ -1899,21 +1908,21 @@ index 0000000..007c162
 +
 +    invoke-virtual/range {v2 .. v7}, Landroid/graphics/Canvas;->drawLine(FFFFLandroid/graphics/Paint;)V
 +
-+    .line 161
++    .line 184
 +    const/high16 v3, 0x3f80
 +
 +    invoke-virtual {v7, v3}, Landroid/graphics/Paint;->setStrokeWidth(F)V
 +
-+    .line 162
++    .line 185
 +    invoke-virtual/range {p1 .. p1}, Landroid/widget/ImageView;->getId()I
 +
 +    move-result v3
 +
-+    const v4, 0x10201a2
++    const v4, 0x102019a
 +
-+    if-eq v3, v4, :cond_b8
++    if-eq v3, v4, :cond_a4
 +
-+    .line 163
++    .line 186
 +    add-int/lit8 v3, v12, -0x1
 +
 +    int-to-float v3, v3
@@ -1928,11 +1937,11 @@ index 0000000..007c162
 +
 +    invoke-virtual/range {v2 .. v7}, Landroid/graphics/Canvas;->drawLine(FFFFLandroid/graphics/Paint;)V
 +
-+    .line 165
-+    :cond_b8
-+    if-eqz v16, :cond_dd
++    .line 188
++    :cond_a4
++    if-eqz v16, :cond_c9
 +
-+    .line 166
++    .line 189
 +    invoke-virtual/range {v22 .. v22}, Landroid/graphics/Bitmap;->getWidth()I
 +
 +    move-result v3
@@ -1945,7 +1954,7 @@ index 0000000..007c162
 +
 +    div-int/lit8 v23, v3, 0x2
 +
-+    .line 167
++    .line 190
 +    .local v23, offsetX:I
 +    invoke-virtual/range {v16 .. v16}, Landroid/graphics/Bitmap;->getHeight()I
 +
@@ -1955,15 +1964,15 @@ index 0000000..007c162
 +
 +    div-int/lit8 v24, v3, 0x2
 +
-+    .line 168
++    .line 191
 +    .local v24, offsetY:I
-+    if-gez v24, :cond_d1
++    if-gez v24, :cond_bd
 +
-+    .line 169
++    .line 192
 +    const/16 v24, 0x0
 +
-+    .line 170
-+    :cond_d1
++    .line 193
++    :cond_bd
 +    move/from16 v0, v23
 +
 +    int-to-float v3, v0
@@ -1978,63 +1987,63 @@ index 0000000..007c162
 +
 +    invoke-virtual {v2, v0, v3, v4, v5}, Landroid/graphics/Canvas;->drawBitmap(Landroid/graphics/Bitmap;FFLandroid/graphics/Paint;)V
 +
-+    .line 173
++    .line 196
 +    .end local v23           #offsetX:I
 +    .end local v24           #offsetY:I
-+    :cond_dd
-+    if-eqz v17, :cond_136
++    :cond_c9
++    if-eqz v17, :cond_122
 +
 +    invoke-virtual/range {v17 .. v17}, Ljava/lang/String;->length()I
 +
 +    move-result v3
 +
-+    if-lez v3, :cond_136
++    if-lez v3, :cond_122
 +
-+    .line 175
++    .line 198
 +    sget-object v3, Landroid/graphics/Typeface;->DEFAULT:Landroid/graphics/Typeface;
 +
 +    invoke-virtual {v7, v3}, Landroid/graphics/Paint;->setTypeface(Landroid/graphics/Typeface;)Landroid/graphics/Typeface;
 +
-+    .line 176
++    .line 199
 +    sget-object v3, Landroid/graphics/Paint$Align;->CENTER:Landroid/graphics/Paint$Align;
 +
 +    invoke-virtual {v7, v3}, Landroid/graphics/Paint;->setTextAlign(Landroid/graphics/Paint$Align;)V
 +
-+    .line 177
++    .line 200
 +    const/high16 v3, 0x41a0
 +
 +    invoke-virtual {v7, v3}, Landroid/graphics/Paint;->setTextSize(F)V
 +
-+    .line 178
++    .line 201
 +    const/4 v3, 0x1
 +
 +    invoke-virtual {v7, v3}, Landroid/graphics/Paint;->setFlags(I)V
 +
-+    .line 180
++    .line 203
 +    move-object/from16 v0, v17
 +
 +    invoke-virtual {v7, v0}, Landroid/graphics/Paint;->measureText(Ljava/lang/String;)F
 +
 +    move-result v26
 +
-+    .line 181
++    .line 204
 +    .local v26, tWidth:F
 +    int-to-float v3, v12
 +
 +    cmpl-float v3, v26, v3
 +
-+    if-lez v3, :cond_12b
++    if-lez v3, :cond_117
 +
-+    .line 182
++    .line 205
 +    const-string v15, "\u2026"
 +
-+    .line 183
++    .line 206
 +    .local v15, ellipsis:Ljava/lang/String;
 +    invoke-virtual {v7, v15}, Landroid/graphics/Paint;->measureText(Ljava/lang/String;)F
 +
 +    move-result v14
 +
-+    .line 185
++    .line 208
 +    .local v14, eWidth:F
 +    invoke-virtual/range {v17 .. v17}, Ljava/lang/String;->length()I
 +
@@ -2043,26 +2052,26 @@ index 0000000..007c162
 +    .local v20, len:I
 +    move/from16 v21, v20
 +
-+    .line 186
++    .line 209
 +    .end local v20           #len:I
 +    .local v21, len:I
-+    :goto_10f
++    :goto_fb
 +    add-float v3, v26, v14
 +
 +    int-to-float v4, v12
 +
 +    cmpl-float v3, v3, v4
 +
-+    if-ltz v3, :cond_157
++    if-ltz v3, :cond_143
 +
 +    add-int/lit8 v20, v21, -0x1
 +
 +    .end local v21           #len:I
 +    .restart local v20       #len:I
-+    if-gtz v21, :cond_145
++    if-gtz v21, :cond_131
 +
-+    .line 190
-+    :goto_11a
++    .line 213
++    :goto_106
 +    new-instance v3, Ljava/lang/StringBuilder;
 +
 +    invoke-static/range {v17 .. v17}, Ljava/lang/String;->valueOf(Ljava/lang/Object;)Ljava/lang/String;
@@ -2079,11 +2088,11 @@ index 0000000..007c162
 +
 +    move-result-object v17
 +
-+    .line 193
++    .line 216
 +    .end local v14           #eWidth:F
 +    .end local v15           #ellipsis:Ljava/lang/String;
 +    .end local v20           #len:I
-+    :cond_12b
++    :cond_117
 +    div-int/lit8 v3, v12, 0x2
 +
 +    int-to-float v3, v3
@@ -2096,9 +2105,9 @@ index 0000000..007c162
 +
 +    invoke-virtual {v2, v0, v3, v4, v7}, Landroid/graphics/Canvas;->drawText(Ljava/lang/String;FFLandroid/graphics/Paint;)V
 +
-+    .line 196
++    .line 219
 +    .end local v26           #tWidth:F
-+    :cond_136
++    :cond_122
 +    move-object/from16 v0, p1
 +
 +    move-object/from16 v1, v22
@@ -2107,7 +2116,7 @@ index 0000000..007c162
 +
 +    goto/16 :goto_8
 +
-+    .line 141
++    .line 164
 +    .end local v2           #canvas:Landroid/graphics/Canvas;
 +    .end local v7           #paint:Landroid/graphics/Paint;
 +    .end local v8           #bHasGlowlight:Z
@@ -2117,19 +2126,19 @@ index 0000000..007c162
 +    .end local v18           #iconOffsetY:I
 +    .end local v19           #labelOffsetY:I
 +    .end local v22           #newBitmap:Landroid/graphics/Bitmap;
-+    :cond_13f
++    :cond_12b
 +    const/4 v8, 0x0
 +
-+    goto/16 :goto_64
++    goto/16 :goto_50
 +
-+    .line 142
++    .line 165
 +    .restart local v8       #bHasGlowlight:Z
-+    :cond_142
++    :cond_12e
 +    const/4 v9, 0x5
 +
-+    goto/16 :goto_67
++    goto/16 :goto_53
 +
-+    .line 187
++    .line 210
 +    .restart local v2       #canvas:Landroid/graphics/Canvas;
 +    .restart local v7       #paint:Landroid/graphics/Paint;
 +    .restart local v9       #buttonCount:I
@@ -2142,7 +2151,7 @@ index 0000000..007c162
 +    .restart local v20       #len:I
 +    .restart local v22       #newBitmap:Landroid/graphics/Bitmap;
 +    .restart local v26       #tWidth:F
-+    :cond_145
++    :cond_131
 +    const/4 v3, 0x0
 +
 +    move-object/from16 v0, v17
@@ -2153,7 +2162,7 @@ index 0000000..007c162
 +
 +    move-result-object v17
 +
-+    .line 188
++    .line 211
 +    move-object/from16 v0, v17
 +
 +    invoke-virtual {v7, v0}, Landroid/graphics/Paint;->measureText(Ljava/lang/String;)F
@@ -2164,14 +2173,14 @@ index 0000000..007c162
 +
 +    .end local v20           #len:I
 +    .restart local v21       #len:I
-+    goto :goto_10f
++    goto :goto_fb
 +
-+    :cond_157
++    :cond_143
 +    move/from16 v20, v21
 +
 +    .end local v21           #len:I
 +    .restart local v20       #len:I
-+    goto :goto_11a
++    goto :goto_106
 +.end method
 diff --git a/com/android/server/status/StatusBarService.smali b/com/android/server/status/StatusBarService.smali
 index 4bc92d2..e9ae737 100644

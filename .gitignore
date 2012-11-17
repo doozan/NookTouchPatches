@@ -1,5 +1,7 @@
 proguard-project.txt
 
+lint.xml
+
 # built application files
 *.apk
 *.ap_

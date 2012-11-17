@@ -1,76 +1,83 @@
----
-
- .../android/internal/policy/impl/LockScreen.smali  |   42 +++++++
- .../android/internal/policy/impl/ModUtils.smali    |  123 ++++++++++++++++++++
- .../internal/policy/impl/PhoneWindowManager.smali  |   64 +++++++++-
- 3 files changed, 226 insertions(+), 3 deletions(-)
- create mode 100644 android.policy/com/android/internal/policy/impl/ModUtils.smali
-
-diff --git a/android.policy/com/android/internal/policy/impl/LockScreen.smali b/android.policy/com/android/internal/policy/impl/LockScreen.smali
-index 3a440a0..47a9e77 100644
---- a/android.policy/com/android/internal/policy/impl/LockScreen.smali
-+++ b/android.policy/com/android/internal/policy/impl/LockScreen.smali
+diff --git a/com/android/internal/policy/impl/LockScreen.smali b/com/android/internal/policy/impl/LockScreen.smali
+index 3a440a0..52d9b76 100644
+--- a/com/android/internal/policy/impl/LockScreen.smali
++++ b/com/android/internal/policy/impl/LockScreen.smali
 @@ -48,6 +48,7 @@
  
  .field private mSelector:Lcom/android/internal/widget/LeftSlidingTab;
  
-+.field private mNotFirstResume:Z
++.field private mSecondResume:Z
  
  # direct methods
  .method static constructor <clinit>()V
-@@ -950,6 +951,47 @@
-     .line 693
-     .end local v0           #r:Landroid/graphics/Rect;
-     :cond_17
-+
+@@ -921,6 +922,54 @@
+     .registers 5
+ 
+     .prologue
 +### Mod Start
 +###
 +### onResume gets called twice, once to setup the screensaver
 +### and once to wait for the unlock trigger.  We need to let the
 +### first call pass through and unlock on the second call
 +###
-+### if ( ! ModUtils.disableDragToUnlock )
-+###    goto NoMod;
-+###
-+### if ( mNotFirstReload ) {
-+###   KeyguardScreenCallback.goToUnlockScreen();
-+###   return;
++### if ( ! mSecondResume )
++###   ModUtils.onScreenSleep(mContext);
++### else {
++###   ModUtils.onScreenResume(mContext);
++###   if ( ! ModUtils.disableDragToUnlock(mContext) ) {
++###     KeyguardScreenCallback.goToUnlockScreen();
++###     return;
++###   }
 +### }
-+### mNotFirstReload = 1;
++### mSecondResume = 1;
 +###
-+### :NoMod
++
++    iget-boolean v1, p0, Lcom/android/internal/policy/impl/LockScreen;->mSecondResume:Z
++    if-nez v1, :cond_ModElse
 +
 +    iget-object v1, p0, Lcom/android/internal/policy/impl/LockScreen;->mContext:Landroid/content/Context;
-+    invoke-static {v1}, Lcom/android/server/status/ModUtils;->disableDragToUnlock(Landroid/content/Context;)Z
++    invoke-static {v1}, Lcom/android/server/status/ModUtils;->onScreenSleep(Landroid/content/Context;)V
 +
++    goto :cond_ModEndIf
++    :cond_ModElse
++
++    iget-object v1, p0, Lcom/android/internal/policy/impl/LockScreen;->mContext:Landroid/content/Context;
++    invoke-static {v1}, Lcom/android/server/status/ModUtils;->onScreenResume(Landroid/content/Context;)V
++
++    invoke-static {v1}, Lcom/android/server/status/ModUtils;->disableDragToUnlock(Landroid/content/Context;)Z
 +    move-result v1
 +    if-eqz v1, :cond_NoMod
-+
-+    iget-boolean v1, p0, Lcom/android/internal/policy/impl/LockScreen;->mNotFirstResume:Z
-+    if-eqz v1, :cond_mod2
 +
 +    iget-object v1, p0, Lcom/android/internal/policy/impl/LockScreen;->mCallback:Lcom/android/internal/policy/impl/KeyguardScreenCallback;
 +    invoke-interface {v1}, Lcom/android/internal/policy/impl/KeyguardScreenCallback;->goToUnlockScreen()V
 +
-+	return-void
++	  return-void
 +
-+	:cond_mod2
++	  :cond_ModEndIf
 +
 +    const/4 v1, 0x1
-+    iput-boolean v1, p0, Lcom/android/internal/policy/impl/LockScreen;->mNotFirstResume:Z
++    iput-boolean v1, p0, Lcom/android/internal/policy/impl/LockScreen;->mSecondResume:Z
 +
 +    :cond_NoMod
 +
 +### Mod End
 +
+     .line 685
+     invoke-direct {p0}, Lcom/android/internal/policy/impl/LockScreen;->updateBackgroundImage()V
+ 
+@@ -950,6 +999,7 @@
+     .line 693
+     .end local v0           #r:Landroid/graphics/Rect;
+     :cond_17
++
      const-string v1, "LockScreen"
  
      sget-object v2, Landroid/hardware/EpdController$HwRegion;->DIALOG:Landroid/hardware/EpdController$HwRegion;
-diff --git a/android.policy/com/android/internal/policy/impl/ModUtils.smali b/android.policy/com/android/internal/policy/impl/ModUtils.smali
+diff --git a/com/android/internal/policy/impl/ModUtils.smali b/com/android/internal/policy/impl/ModUtils.smali
 new file mode 100644
-index 0000000..9a36e82
+index 0000000..0b5f494
 --- /dev/null
-+++ b/android.policy/com/android/internal/policy/impl/ModUtils.smali
++++ b/com/android/internal/policy/impl/ModUtils.smali
 @@ -0,0 +1,123 @@
 +.class public Lcom/android/internal/policy/impl/ModUtils;
 +.super Ljava/lang/Object;
@@ -90,7 +97,7 @@ index 0000000..9a36e82
 +    .registers 1
 +
 +    .prologue
-+    .line 8
++    .line 7
 +    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
 +
 +    return-void
@@ -102,7 +109,7 @@ index 0000000..9a36e82
 +    .parameter "action"
 +
 +    .prologue
-+    .line 35
++    .line 34
 +    invoke-static {p0, p1}, Lcom/android/server/status/ModUtils;->doAction(Landroid/content/Context;Ljava/lang/String;)Z
 +
 +    move-result v0
@@ -114,7 +121,7 @@ index 0000000..9a36e82
 +    .registers 1
 +
 +    .prologue
-+    .line 47
++    .line 46
 +    sget-object v0, Lcom/android/internal/policy/impl/ModUtils;->mContext:Lcom/android/internal/policy/impl/PhoneWindowManager;
 +
 +    return-object v0
@@ -124,7 +131,7 @@ index 0000000..9a36e82
 +    .registers 1
 +
 +    .prologue
-+    .line 15
++    .line 14
 +    const-string v0, "0.1.0"
 +
 +    return-object v0
@@ -135,12 +142,12 @@ index 0000000..9a36e82
 +    .parameter "context"
 +
 +    .prologue
-+    .line 18
++    .line 17
 +    invoke-virtual {p0}, Landroid/content/Context;->getContentResolver()Landroid/content/ContentResolver;
 +
 +    move-result-object v1
 +
-+    .line 19
++    .line 18
 +    .local v1, resolver:Landroid/content/ContentResolver;
 +    const-string v2, "mod.key.home.cmd"
 +
@@ -148,7 +155,7 @@ index 0000000..9a36e82
 +
 +    move-result-object v0
 +
-+    .line 22
++    .line 21
 +    .local v0, action:Ljava/lang/String;
 +    invoke-static {p0, v0}, Lcom/android/internal/policy/impl/ModUtils;->doAction(Landroid/content/Context;Ljava/lang/String;)Z
 +
@@ -162,12 +169,12 @@ index 0000000..9a36e82
 +    .parameter "context"
 +
 +    .prologue
-+    .line 26
++    .line 25
 +    invoke-virtual {p0}, Landroid/content/Context;->getContentResolver()Landroid/content/ContentResolver;
 +
 +    move-result-object v1
 +
-+    .line 27
++    .line 26
 +    .local v1, resolver:Landroid/content/ContentResolver;
 +    const-string v2, "mod.key.home_long.cmd"
 +
@@ -175,7 +182,7 @@ index 0000000..9a36e82
 +
 +    move-result-object v0
 +
-+    .line 30
++    .line 29
 +    .local v0, action:Ljava/lang/String;
 +    invoke-static {p0, v0}, Lcom/android/internal/policy/impl/ModUtils;->doAction(Landroid/content/Context;Ljava/lang/String;)Z
 +
@@ -189,16 +196,16 @@ index 0000000..9a36e82
 +    .parameter "context"
 +
 +    .prologue
-+    .line 41
++    .line 40
 +    sput-object p0, Lcom/android/internal/policy/impl/ModUtils;->mContext:Lcom/android/internal/policy/impl/PhoneWindowManager;
 +
-+    .line 42
++    .line 41
 +    return-void
 +.end method
-diff --git a/android.policy/com/android/internal/policy/impl/PhoneWindowManager.smali b/android.policy/com/android/internal/policy/impl/PhoneWindowManager.smali
+diff --git a/com/android/internal/policy/impl/PhoneWindowManager.smali b/com/android/internal/policy/impl/PhoneWindowManager.smali
 index 60f3f2a..00e787b 100644
---- a/android.policy/com/android/internal/policy/impl/PhoneWindowManager.smali
-+++ b/android.policy/com/android/internal/policy/impl/PhoneWindowManager.smali
+--- a/com/android/internal/policy/impl/PhoneWindowManager.smali
++++ b/com/android/internal/policy/impl/PhoneWindowManager.smali
 @@ -946,11 +946,18 @@
      .local v7, delta3:J
      move-object/from16 v0, p0
@@ -296,6 +303,3 @@ index 60f3f2a..00e787b 100644
      const/4 v10, 0x1
  
      const/high16 v6, 0x1020
--- 
-1.7.10.msysgit.1
-
