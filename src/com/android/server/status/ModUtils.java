@@ -27,11 +27,10 @@ import android.widget.ImageView;
 
 public class ModUtils {
   
-  private static final String VERSION          = "0.1.0";
+  private static final String VERSION          = "0.2.0";
   private static final String TAG              = "NookMod";
-
   
-  /* 1.2.0 constants */
+  /* 1.2.0 constants * 
   private static final int QUICKNAV_HOME       = 0x102019E;
   private static final int QUICKNAV_LIBRARY    = 0x102019F;
   private static final int QUICKNAV_SHOP       = 0x10201A0;
@@ -43,9 +42,8 @@ public class ModUtils {
   private static final int STATUSBAR_READNOW   = 0x1020223;
   private static final int STATUSBAR_NOTIFY    = 0x1020224;
   private static final int STATUSBAR_GLOWLIGHT = 0x1020226;
-
+*/
   /* 1.1.5 constants */
-  /*
   private static final int QUICKNAV_HOME       = 0x1020196;
   private static final int QUICKNAV_LIBRARY    = 0x1020197;
   private static final int QUICKNAV_SHOP       = 0x1020198;
@@ -57,7 +55,6 @@ public class ModUtils {
   private static final int STATUSBAR_READNOW   = 0x1020222;
   private static final int STATUSBAR_NOTIFY    = 0x1020223;
   private static final int STATUSBAR_GLOWLIGHT = 0x1020225;
-  */
 
   public static String getVersion() { return VERSION; }
 
@@ -112,6 +109,29 @@ public class ModUtils {
       return ( Settings.System.getInt(resolver, "mod.option.disable_drag_to_unlock") > 0 );
     } catch (SettingNotFoundException e) {
       return false;
+    }
+  }
+  
+  public static void onScreenSleep(Context context) {
+    ContentResolver resolver = context.getContentResolver();
+    try {
+      if ( Settings.System.getInt(resolver, "mod.option.restore_glowlight_on_wake") > 0 ) {
+        String lightStatus = Settings.System.getString(resolver, "screen_brightness_mode");
+        Settings.System.putString(resolver, "mod.misc.wake_screen_brightness_mode", lightStatus);
+        //Log.v(TAG, "OnScreenSleep screen_brightness_mode = " + lightStatus );
+      }
+    } catch (SettingNotFoundException e) {
+    }
+  }
+
+  public static void onScreenResume(Context context) {
+    //Log.v(TAG, "OnScreenResume");
+    ContentResolver resolver = context.getContentResolver();
+    try {
+      if ( ( Settings.System.getInt(resolver, "mod.option.restore_glowlight_on_wake") > 0 ) &&   
+           ( Settings.System.getInt(resolver, "mod.misc.wake_screen_brightness_mode") > 0 ) )
+               doToggleGlowlight(context);
+    } catch (SettingNotFoundException e) {
     }
   }
 
@@ -255,10 +275,10 @@ public class ModUtils {
     else if (action.startsWith("BROADCAST:"))
       return doBroadcast(context, action.substring("BROADCAST:".length()));
 
-    else if (action.startsWith("KEY:") || action.startsWith("LONGKEY:")) {
+    else if (action.startsWith("KEY:")) {
       new Thread(new Runnable() {
         public void run() {
-          doKey(context, Integer.parseInt( action.substring("KEY:".length()) ), action.startsWith("LONGKEY:") );
+            doKey(context, Integer.parseInt( action.substring("KEY:".length()) ) );
         }
       }).start();       
       return true;
@@ -323,11 +343,11 @@ public class ModUtils {
     if(command == null || command.length() == 0)
       return false;
 
-        context.sendBroadcast( getIntentFromString( command ) );
-      return true;
+    context.sendBroadcast( getIntentFromString( command ) );
+    return true;
   }
 
-  private static boolean doKey(Context context, int keycode, Boolean longpress) {
+  private static boolean doKey(Context context, int keycode) {
     if(keycode <= 0)
       return false;
 

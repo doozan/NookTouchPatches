@@ -290,6 +290,15 @@ Check Specify working set of relavent resources and click the Specify Resources 
 
 Check the "src" directory and the "build\smali" directory under the NookTouchPatches project
 
+Save
+
+
+From the menu, select Windows | Preferences
+
+From the tree, choose Android | Build
+
+uncheck "Skip packaging and dexing until export or launch. (Speeds up automatic builds on file save)"
+
 
 Configure the Run action
 ------------------------
