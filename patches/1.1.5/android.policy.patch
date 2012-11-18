@@ -75,7 +75,7 @@ index 3a440a0..52d9b76 100644
      sget-object v2, Landroid/hardware/EpdController$HwRegion;->DIALOG:Landroid/hardware/EpdController$HwRegion;
 diff --git a/com/android/internal/policy/impl/ModUtils.smali b/com/android/internal/policy/impl/ModUtils.smali
 new file mode 100644
-index 0000000..0b5f494
+index 0000000..dfcd15c
 --- /dev/null
 +++ b/com/android/internal/policy/impl/ModUtils.smali
 @@ -0,0 +1,123 @@
@@ -87,7 +87,7 @@ index 0000000..0b5f494
 +# static fields
 +.field private static final TAG:Ljava/lang/String; = "NookMod"
 +
-+.field private static final VERSION:Ljava/lang/String; = "0.1.0"
++.field private static final VERSION:Ljava/lang/String; = "0.1.1"
 +
 +.field private static volatile mContext:Lcom/android/internal/policy/impl/PhoneWindowManager;
 +
@@ -132,7 +132,7 @@ index 0000000..0b5f494
 +
 +    .prologue
 +    .line 14
-+    const-string v0, "0.1.0"
++    const-string v0, "0.1.1"
 +
 +    return-object v0
 +.end method
@@ -203,7 +203,7 @@ index 0000000..0b5f494
 +    return-void
 +.end method
 diff --git a/com/android/internal/policy/impl/PhoneWindowManager.smali b/com/android/internal/policy/impl/PhoneWindowManager.smali
-index 60f3f2a..00e787b 100644
+index 60f3f2a..79e3f14 100644
 --- a/com/android/internal/policy/impl/PhoneWindowManager.smali
 +++ b/com/android/internal/policy/impl/PhoneWindowManager.smali
 @@ -946,11 +946,18 @@
@@ -271,7 +271,7 @@ index 60f3f2a..00e787b 100644
 +###   Override the home key press action
 +###
 +### if ( ModUtils.onHomeKeyPress() )
-+###   return 1;
++###   return 0;
 +
 +    move-object/from16 v0, p0
 +    iget-object v0, v0, Lcom/android/internal/policy/impl/PhoneWindowManager;->mContext:Landroid/content/Context;
@@ -280,7 +280,7 @@ index 60f3f2a..00e787b 100644
 +    move-result v0
 +    if-eqz v0, :cond_mod2
 +
-+    const/4 v0, 0x1
++    const/4 v0, 0x0
 +    return v0
 +
 +    :cond_mod2

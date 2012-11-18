@@ -1,55 +1,62 @@
 diff --git a/com/android/internal/policy/impl/LockScreen.smali b/com/android/internal/policy/impl/LockScreen.smali
-index b7f7e46..2a31b5f 100644
+index b7f7e46..ff1aa69 100644
 --- a/com/android/internal/policy/impl/LockScreen.smali
 +++ b/com/android/internal/policy/impl/LockScreen.smali
 @@ -46,6 +46,7 @@
  
  .field private mSelector:Lcom/android/internal/widget/LeftSlidingTab;
  
-+.field private mNotFirstResume:Z
++.field private bSecondResume:Z
  
  # direct methods
  .method static constructor <clinit>()V
-@@ -876,6 +877,47 @@
+@@ -876,6 +877,54 @@
      .line 697
      .end local v0           #r:Landroid/graphics/Rect;
      :cond_17
-+
 +### Mod Start
 +###
 +### onResume gets called twice, once to setup the screensaver
 +### and once to wait for the unlock trigger.  We need to let the
 +### first call pass through and unlock on the second call
 +###
-+### if ( ! ModUtils.disableDragToUnlock )
-+###    goto NoMod;
-+###
-+### if ( mNotFirstReload ) {
-+###   KeyguardScreenCallback.goToUnlockScreen();
-+###   return;
++### if ( ! mSecondResume )
++###   ModUtils.onScreenSleep(mContext);
++### else {
++###   ModUtils.onScreenResume(mContext);
++###   if ( ! ModUtils.disableDragToUnlock(mContext) ) {
++###     KeyguardScreenCallback.goToUnlockScreen();
++###     return;
++###   }
 +### }
-+### mNotFirstReload = 1;
++### mSecondResume = 1;
 +###
-+### :NoMod
++
++    iget-boolean v1, p0, Lcom/android/internal/policy/impl/LockScreen;->mSecondResume:Z
++    if-nez v1, :cond_ModElse
 +
 +    iget-object v1, p0, Lcom/android/internal/policy/impl/LockScreen;->mContext:Landroid/content/Context;
-+    invoke-static {v1}, Lcom/android/server/status/ModUtils;->disableDragToUnlock(Landroid/content/Context;)Z
++    invoke-static {v1}, Lcom/android/server/status/ModUtils;->onScreenSleep(Landroid/content/Context;)V
 +
++    goto :cond_ModEndIf
++    :cond_ModElse
++
++    iget-object v1, p0, Lcom/android/internal/policy/impl/LockScreen;->mContext:Landroid/content/Context;
++    invoke-static {v1}, Lcom/android/server/status/ModUtils;->onScreenResume(Landroid/content/Context;)V
++
++    invoke-static {v1}, Lcom/android/server/status/ModUtils;->disableDragToUnlock(Landroid/content/Context;)Z
 +    move-result v1
 +    if-eqz v1, :cond_NoMod
-+
-+    iget-boolean v1, p0, Lcom/android/internal/policy/impl/LockScreen;->mNotFirstResume:Z
-+    if-eqz v1, :cond_mod2
 +
 +    iget-object v1, p0, Lcom/android/internal/policy/impl/LockScreen;->mCallback:Lcom/android/internal/policy/impl/KeyguardScreenCallback;
 +    invoke-interface {v1}, Lcom/android/internal/policy/impl/KeyguardScreenCallback;->goToUnlockScreen()V
 +
-+    return-void
++	  return-void
 +
-+    :cond_mod2
++	  :cond_ModEndIf
 +
 +    const/4 v1, 0x1
-+    iput-boolean v1, p0, Lcom/android/internal/policy/impl/LockScreen;->mNotFirstResume:Z
++    iput-boolean v1, p0, Lcom/android/internal/policy/impl/LockScreen;->mSecondResume:Z
 +
 +    :cond_NoMod
 +
@@ -60,7 +67,7 @@ index b7f7e46..2a31b5f 100644
      const-string v2, "LockScreen"
 diff --git a/com/android/internal/policy/impl/ModUtils.smali b/com/android/internal/policy/impl/ModUtils.smali
 new file mode 100644
-index 0000000..0b5f494
+index 0000000..dfcd15c
 --- /dev/null
 +++ b/com/android/internal/policy/impl/ModUtils.smali
 @@ -0,0 +1,123 @@
@@ -72,7 +79,7 @@ index 0000000..0b5f494
 +# static fields
 +.field private static final TAG:Ljava/lang/String; = "NookMod"
 +
-+.field private static final VERSION:Ljava/lang/String; = "0.1.0"
++.field private static final VERSION:Ljava/lang/String; = "0.1.1"
 +
 +.field private static volatile mContext:Lcom/android/internal/policy/impl/PhoneWindowManager;
 +
@@ -117,7 +124,7 @@ index 0000000..0b5f494
 +
 +    .prologue
 +    .line 14
-+    const-string v0, "0.1.0"
++    const-string v0, "0.1.1"
 +
 +    return-object v0
 +.end method
@@ -188,7 +195,7 @@ index 0000000..0b5f494
 +    return-void
 +.end method
 diff --git a/com/android/internal/policy/impl/PhoneWindowManager.smali b/com/android/internal/policy/impl/PhoneWindowManager.smali
-index 3700cb4..2a767c6 100644
+index 3700cb4..7a9c116 100644
 --- a/com/android/internal/policy/impl/PhoneWindowManager.smali
 +++ b/com/android/internal/policy/impl/PhoneWindowManager.smali
 @@ -946,11 +946,18 @@
@@ -247,3 +254,44 @@ index 3700cb4..2a767c6 100644
      .line 2799
      const/16 v16, 0x1
  
+@@ -1047,6 +1078,26 @@
+ 
+     if-gez v16, :cond_11d
+ 
++### MOD Start
++###
++###   Override the home key press action
++###
++### if ( ModUtils.onHomeKeyPress() )
++###   return 0;
++
++    move-object/from16 v0, p0
++    iget-object v0, v0, Lcom/android/internal/policy/impl/PhoneWindowManager;->mContext:Landroid/content/Context;
++    invoke-static {v0}, Lcom/android/internal/policy/impl/ModUtils;->onHomeKeyPress(Landroid/content/Context;)Z
++
++    move-result v0
++    if-eqz v0, :cond_mod2
++
++    const/4 v0, 0x0
++    return v0
++
++    :cond_mod2
++### MOD End
++
+     .line 2813
+     const-string v16, "WindowManager"
+ 
+@@ -3191,6 +3242,13 @@
+     .parameter "powerManager"
+ 
+     .prologue
++
++### MOD Start
++####
++#### Store a reference to this object so we can call internal methods from ModUtils
++	invoke-static {p0}, Lcom/android/internal/policy/impl/ModUtils;->setContext(Lcom/android/internal/policy/impl/PhoneWindowManager;)V
++### MOD End
++
+     const/4 v10, 0x1
+ 
+     const/high16 v6, 0x1020

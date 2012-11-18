@@ -193,7 +193,7 @@ index 0000000..6973ecb
 +.end method
 diff --git a/com/android/server/status/ModUtils.smali b/com/android/server/status/ModUtils.smali
 new file mode 100644
-index 0000000..c49edf3
+index 0000000..a1df8e9
 --- /dev/null
 +++ b/com/android/server/status/ModUtils.smali
 @@ -0,0 +1,1985 @@
@@ -203,27 +203,27 @@ index 0000000..c49edf3
 +
 +
 +# static fields
-+.field private static final QUICKNAV_GLOWLIGHT:I = 0x102019b
++.field private static final QUICKNAV_GLOWLIGHT:I = 0x10201a3
 +
-+.field private static final QUICKNAV_HOME:I = 0x1020196
++.field private static final QUICKNAV_HOME:I = 0x102019e
 +
-+.field private static final QUICKNAV_LIBRARY:I = 0x1020197
++.field private static final QUICKNAV_LIBRARY:I = 0x102019f
 +
-+.field private static final QUICKNAV_SEARCH:I = 0x1020199
++.field private static final QUICKNAV_SEARCH:I = 0x10201a1
 +
-+.field private static final QUICKNAV_SETTINGS:I = 0x102019a
++.field private static final QUICKNAV_SETTINGS:I = 0x10201a2
 +
-+.field private static final QUICKNAV_SHOP:I = 0x1020198
++.field private static final QUICKNAV_SHOP:I = 0x10201a0
 +
-+.field private static final STATUSBAR_BACK:I = 0x1020220
++.field private static final STATUSBAR_BACK:I = 0x1020221
 +
-+.field private static final STATUSBAR_GLOWLIGHT:I = 0x1020225
++.field private static final STATUSBAR_GLOWLIGHT:I = 0x1020226
 +
-+.field private static final STATUSBAR_MENU:I = 0x1020221
++.field private static final STATUSBAR_MENU:I = 0x1020222
 +
-+.field private static final STATUSBAR_NOTIFY:I = 0x1020223
++.field private static final STATUSBAR_NOTIFY:I = 0x1020224
 +
-+.field private static final STATUSBAR_READNOW:I = 0x1020222
++.field private static final STATUSBAR_READNOW:I = 0x1020223
 +
 +.field private static final TAG:Ljava/lang/String; = "NookMod"
 +
@@ -1395,17 +1395,17 @@ index 0000000..c49edf3
 +    .line 62
 +    :sswitch_data_26
 +    .sparse-switch
-+        0x1020196 -> :sswitch_5
-+        0x1020197 -> :sswitch_8
-+        0x1020198 -> :sswitch_b
-+        0x1020199 -> :sswitch_e
-+        0x102019a -> :sswitch_11
-+        0x102019b -> :sswitch_14
-+        0x1020220 -> :sswitch_17
-+        0x1020221 -> :sswitch_1a
-+        0x1020222 -> :sswitch_1d
-+        0x1020223 -> :sswitch_20
-+        0x1020225 -> :sswitch_23
++        0x102019e -> :sswitch_5
++        0x102019f -> :sswitch_8
++        0x10201a0 -> :sswitch_b
++        0x10201a1 -> :sswitch_e
++        0x10201a2 -> :sswitch_11
++        0x10201a3 -> :sswitch_14
++        0x1020221 -> :sswitch_17
++        0x1020222 -> :sswitch_1a
++        0x1020223 -> :sswitch_1d
++        0x1020224 -> :sswitch_20
++        0x1020226 -> :sswitch_23
 +    .end sparse-switch
 +.end method
 +
@@ -1918,7 +1918,7 @@ index 0000000..c49edf3
 +
 +    move-result v3
 +
-+    const v4, 0x102019a
++    const v4, 0x10201a2
 +
 +    if-eq v3, v4, :cond_a4
 +
