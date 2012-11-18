@@ -245,6 +245,7 @@ download and save the the following files to the "build\bin" folder:
 
 ### Extract and decompile the jars
 Export VER to match the platform you're targetting (1.1.5 or 1.2.0)
+
     set VER=1.1.5
     cd build
 
