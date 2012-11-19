@@ -19,6 +19,11 @@ import android.graphics.drawable.Drawable;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
+import android.text.DynamicLayout;
+import android.text.Layout;
+import android.text.StaticLayout;
+import android.text.TextPaint;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
@@ -27,7 +32,7 @@ import android.widget.ImageView;
 
 public class ModUtils {
   
-  private static final String VERSION          = "0.2.0";
+  private static final String VERSION          = "0.2.1";
   private static final String TAG              = "NookMod";
   
   /* 1.2.0 constants * 
@@ -166,7 +171,7 @@ public class ModUtils {
     int buttonWidth = display.getWidth() / buttonCount;
     int buttonHeight = 112;
 
-    int labelOffsetY = 86;
+    int labelOffsetY = 68;
     int iconOffsetY  = 96;
     
       Canvas canvas = new Canvas();
@@ -195,28 +200,35 @@ public class ModUtils {
 
     if(iconLabel != null && iconLabel.length() > 0)
     {
-        paint.setTypeface(Typeface.DEFAULT);
-        paint.setTextAlign(Paint.Align.CENTER);
-        paint.setTextSize(20);
-        paint.setFlags(Paint.ANTI_ALIAS_FLAG);
+        TextPaint tpaint = new TextPaint();
+        tpaint.setTypeface(Typeface.DEFAULT);
+        tpaint.setTextSize(18);     
+        tpaint.setFlags(Paint.ANTI_ALIAS_FLAG);
 
-        float tWidth = paint.measureText(iconLabel);
-        if ( tWidth > buttonWidth ) {
-          String ellipsis = "…";
-          float eWidth = paint.measureText(ellipsis);
+        float scale = 1;
+        float scale_step = .05f;
+        float scale_min = .5f;
 
-          int len = iconLabel.length();
-            while ( tWidth+eWidth >= buttonWidth && len-- > 0 ) {
-                iconLabel = iconLabel.substring(0, len);
-                tWidth = paint.measureText(iconLabel);
-            }
-            iconLabel += ellipsis;
+        // Attempt to squeeze font to make text fit in 2 lines
+        StaticLayout layout = new StaticLayout((CharSequence) iconLabel, tpaint, buttonWidth, Layout.Alignment.ALIGN_CENTER, .8f, 0, true);
+        while (layout.getLineCount() > 2 && scale > scale_min)
+        {
+          scale -= scale_step;
+          tpaint.setTextScaleX(scale);
+          layout =  new StaticLayout((CharSequence) iconLabel, tpaint, buttonWidth, Layout.Alignment.ALIGN_CENTER, .8f, 0, true);
         }
+        
+        // Text did not fit in two lines, use an ellipse
+        if (layout.getLineCount() > 2)
+            layout = new StaticLayout((CharSequence) iconLabel, 0, iconLabel.length(), tpaint, buttonWidth, Layout.Alignment.ALIGN_CENTER, .8f, 1.0f, false, TextUtils.TruncateAt.END, buttonWidth);
 
-        canvas.drawText(iconLabel, buttonWidth/2, labelOffsetY, paint);
+        canvas.save();
+        canvas.translate(0, labelOffsetY);
+        layout.draw(canvas);
+        canvas.restore();
     }
       
-        view.setImageBitmap(newBitmap);
+    view.setImageBitmap(newBitmap);
   }
 
   private static Bitmap getButtonBitmap(Context context, String buttonName)
