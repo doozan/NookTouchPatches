@@ -35,7 +35,7 @@ public class ModUtils {
   private static final String VERSION          = "0.2.1";
   private static final String TAG              = "NookMod";
   
-  /* 1.2.0 constants * 
+  /* 1.2.0 constants */
   private static final int QUICKNAV_HOME       = 0x102019E;
   private static final int QUICKNAV_LIBRARY    = 0x102019F;
   private static final int QUICKNAV_SHOP       = 0x10201A0;
@@ -47,8 +47,8 @@ public class ModUtils {
   private static final int STATUSBAR_READNOW   = 0x1020223;
   private static final int STATUSBAR_NOTIFY    = 0x1020224;
   private static final int STATUSBAR_GLOWLIGHT = 0x1020226;
-*/
-  /* 1.1.5 constants */
+
+  /* 1.1.5 constants *
   private static final int QUICKNAV_HOME       = 0x1020196;
   private static final int QUICKNAV_LIBRARY    = 0x1020197;
   private static final int QUICKNAV_SHOP       = 0x1020198;
@@ -60,6 +60,7 @@ public class ModUtils {
   private static final int STATUSBAR_READNOW   = 0x1020222;
   private static final int STATUSBAR_NOTIFY    = 0x1020223;
   private static final int STATUSBAR_GLOWLIGHT = 0x1020225;
+  */
 
   public static String getVersion() { return VERSION; }
 

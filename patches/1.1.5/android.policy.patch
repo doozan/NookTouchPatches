@@ -1,7 +1,7 @@
-diff --git a/com/android/internal/policy/impl/LockScreen.smali b/com/android/internal/policy/impl/LockScreen.smali
+diff --git a/android.policy/com/android/internal/policy/impl/LockScreen.smali b/android.policy/com/android/internal/policy/impl/LockScreen.smali
 index 3a440a0..52d9b76 100644
---- a/com/android/internal/policy/impl/LockScreen.smali
-+++ b/com/android/internal/policy/impl/LockScreen.smali
+--- a/android.policy/com/android/internal/policy/impl/LockScreen.smali
++++ b/android.policy/com/android/internal/policy/impl/LockScreen.smali
 @@ -48,6 +48,7 @@
  
  .field private mSelector:Lcom/android/internal/widget/LeftSlidingTab;
@@ -73,11 +73,11 @@ index 3a440a0..52d9b76 100644
      const-string v1, "LockScreen"
  
      sget-object v2, Landroid/hardware/EpdController$HwRegion;->DIALOG:Landroid/hardware/EpdController$HwRegion;
-diff --git a/com/android/internal/policy/impl/ModUtils.smali b/com/android/internal/policy/impl/ModUtils.smali
+diff --git a/android.policy/com/android/internal/policy/impl/ModUtils.smali b/android.policy/com/android/internal/policy/impl/ModUtils.smali
 new file mode 100644
 index 0000000..dfcd15c
 --- /dev/null
-+++ b/com/android/internal/policy/impl/ModUtils.smali
++++ b/android.policy/com/android/internal/policy/impl/ModUtils.smali
 @@ -0,0 +1,123 @@
 +.class public Lcom/android/internal/policy/impl/ModUtils;
 +.super Ljava/lang/Object;
@@ -202,10 +202,10 @@ index 0000000..dfcd15c
 +    .line 41
 +    return-void
 +.end method
-diff --git a/com/android/internal/policy/impl/PhoneWindowManager.smali b/com/android/internal/policy/impl/PhoneWindowManager.smali
+diff --git a/android.policy/com/android/internal/policy/impl/PhoneWindowManager.smali b/android.policy/com/android/internal/policy/impl/PhoneWindowManager.smali
 index 60f3f2a..79e3f14 100644
---- a/com/android/internal/policy/impl/PhoneWindowManager.smali
-+++ b/com/android/internal/policy/impl/PhoneWindowManager.smali
+--- a/android.policy/com/android/internal/policy/impl/PhoneWindowManager.smali
++++ b/android.policy/com/android/internal/policy/impl/PhoneWindowManager.smali
 @@ -946,11 +946,18 @@
      .local v7, delta3:J
      move-object/from16 v0, p0

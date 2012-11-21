@@ -1,15 +1,15 @@
-diff --git a/.gitignore b/.gitignore
+diff --git a/services/.gitignore b/services/.gitignore
 new file mode 100644
 index 0000000..7664704
 --- /dev/null
-+++ b/.gitignore
++++ b/services/.gitignore
 @@ -0,0 +1 @@
 +*.bak
 \ No newline at end of file
-diff --git a/com/android/server/status/BNGossamerQuickNavbar.smali b/com/android/server/status/BNGossamerQuickNavbar.smali
+diff --git a/services/com/android/server/status/BNGossamerQuickNavbar.smali b/services/com/android/server/status/BNGossamerQuickNavbar.smali
 index 84f834d..9567d2e 100644
---- a/com/android/server/status/BNGossamerQuickNavbar.smali
-+++ b/com/android/server/status/BNGossamerQuickNavbar.smali
+--- a/services/com/android/server/status/BNGossamerQuickNavbar.smali
++++ b/services/com/android/server/status/BNGossamerQuickNavbar.smali
 @@ -464,6 +464,13 @@
      .line 80
      invoke-direct {p0}, Lcom/android/server/status/BNGossamerQuickNavbar;->setOnClickListeners()V
@@ -119,11 +119,11 @@ index 84f834d..9567d2e 100644
      .line 171
      if-eqz p1, :cond_13
  
-diff --git a/com/android/server/status/ModUtils$1.smali b/com/android/server/status/ModUtils$1.smali
+diff --git a/services/com/android/server/status/ModUtils$1.smali b/services/com/android/server/status/ModUtils$1.smali
 new file mode 100644
 index 0000000..1b574fe
 --- /dev/null
-+++ b/com/android/server/status/ModUtils$1.smali
++++ b/services/com/android/server/status/ModUtils$1.smali
 @@ -0,0 +1,74 @@
 +.class Lcom/android/server/status/ModUtils$1;
 +.super Ljava/lang/Object;
@@ -199,11 +199,11 @@ index 0000000..1b574fe
 +    .line 294
 +    return-void
 +.end method
-diff --git a/com/android/server/status/ModUtils.smali b/com/android/server/status/ModUtils.smali
+diff --git a/services/com/android/server/status/ModUtils.smali b/services/com/android/server/status/ModUtils.smali
 new file mode 100644
 index 0000000..98cfef4
 --- /dev/null
-+++ b/com/android/server/status/ModUtils.smali
++++ b/services/com/android/server/status/ModUtils.smali
 @@ -0,0 +1,2009 @@
 +.class public Lcom/android/server/status/ModUtils;
 +.super Ljava/lang/Object;
@@ -2214,10 +2214,10 @@ index 0000000..98cfef4
 +    .restart local v8       #layout:Landroid/text/StaticLayout;
 +    goto :goto_101
 +.end method
-diff --git a/com/android/server/status/StatusBarService.smali b/com/android/server/status/StatusBarService.smali
+diff --git a/services/com/android/server/status/StatusBarService.smali b/services/com/android/server/status/StatusBarService.smali
 index d143ae8..b6ef816 100644
---- a/com/android/server/status/StatusBarService.smali
-+++ b/com/android/server/status/StatusBarService.smali
+--- a/services/com/android/server/status/StatusBarService.smali
++++ b/services/com/android/server/status/StatusBarService.smali
 @@ -2114,6 +2114,24 @@
      .parameter "action"
  
