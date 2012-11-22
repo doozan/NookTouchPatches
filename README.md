@@ -4,7 +4,7 @@ Patch build/development instructions are available [below](#patch-development).
 Patch Installation
 ==================
 
-The current patches are only compatable with  Nook system software 1.1.5 (Glowtouch) and 1.2.0 (EuroNook).
+The current patches are only compatible with Nook system software 1.2.0 and 1.1.5 (Glowtouch original firmware).
 
 Configure your build directory
 ------------------------------
@@ -18,13 +18,13 @@ download and save the following files to the nookmods folder:
 [baksmali](https://smali.googlecode.com/files/baksmali-1.4.0.jar),
 [smali](https://smali.googlecode.com/files/smali-1.4.0.jar)
 
-Download and save the approprate patches to the nookmods folder.
-
-For system 1.1.5, use [android.policy.patch](https://github.com/doozan/NookTouchPatches/raw/master/patches/1.1.5/android.policy.patch) and
-[services.patch](https://github.com/doozan/NookTouchPatches/raw/master/patches/1.1.5/services.patch)
+Download and save the appropriate patches to the nookmods folder.
 
 For system 1.2.0, use [android.policy.patch](https://github.com/doozan/NookTouchPatches/raw/master/patches/1.2.0/android.policy.patch) and
 [services.patch](https://github.com/doozan/NookTouchPatches/raw/master/patches/1.2.0/services.patch)
+
+For system 1.1.5, use [android.policy.patch](https://github.com/doozan/NookTouchPatches/raw/master/patches/1.1.5/android.policy.patch) and
+[services.patch](https://github.com/doozan/NookTouchPatches/raw/master/patches/1.1.5/services.patch)
 
 
 
@@ -244,9 +244,9 @@ download and save the the following files to the "build\bin" folder:
 [smali](https://smali.googlecode.com/files/smali-1.4.0.jar),
 
 ### Extract and decompile the jars
-Export VER to match the platform you're targetting (1.1.5 or 1.2.0)
+Export VER to match the platform you're targetting (1.2.0 or 1.1.5)
 
-    set VER=1.1.5
+    set VER=1.2.0
     cd build
 
     adb pull /system/framework/android.policy.jar jar/%VER%/android.policy.orig.jar
@@ -283,7 +283,7 @@ Location: Click Browse Workspace, select builder.bat in your "build" folder
 
 Working Directory: Click Browse Workspace, select your "build" folder
 
-Arguments: The system version you are targeting (ex 1.1.5 or 1.2.0).
+Arguments: The system version you are targeting (ex 1.2.0 or 1.1.5).
 
 Build options: Run the builder: During manual builds
 

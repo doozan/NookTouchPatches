@@ -29,10 +29,11 @@ import android.view.Display;
 import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 public class ModUtils {
   
-  private static final String VERSION          = "0.2.1";
+  private static final String VERSION          = "0.3.0";
   private static final String TAG              = "NookMod";
   
   /* 1.2.0 constants */
@@ -116,6 +117,30 @@ public class ModUtils {
     } catch (SettingNotFoundException e) {
       return false;
     }
+  }
+
+  public static boolean disableSSBanner(Context context)
+  {    
+    ContentResolver resolver = context.getContentResolver();
+    try {
+      if ( Settings.System.getInt(resolver, "mod.option.hide_screensaver_banner") > 0 ) {
+        return true;
+      }
+    } catch (SettingNotFoundException e) {
+    }
+    return false;
+  }  
+
+  public static boolean drawCustomBannerText(Context context, TextView textview)
+  {
+    ContentResolver resolver = context.getContentResolver();
+    String bannerText = Settings.System.getString(resolver, "mod.misc.custom_banner_text");
+    if (bannerText != null && bannerText.length() > 0)
+    {
+      textview.setText( bannerText.replace("\\n", "\n") );
+      return true;
+    }
+    return false;
   }
   
   public static void onScreenSleep(Context context) {
