@@ -1,3 +1,11 @@
+diff --git a/services/.gitignore b/services/.gitignore
+new file mode 100644
+index 0000000..7664704
+--- /dev/null
++++ b/services/.gitignore
+@@ -0,0 +1 @@
++*.bak
+\ No newline at end of file
 diff --git a/services/com/android/server/PowerManagerService.smali b/services/com/android/server/PowerManagerService.smali
 index f9559d6..b8081c6 100644
 --- a/services/com/android/server/PowerManagerService.smali
