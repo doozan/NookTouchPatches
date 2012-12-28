@@ -242,6 +242,7 @@ download [7za920.zip](http://sourceforge.net/projects/sevenzip/files/7-Zip/9.20/
 download and save the the following files to the "build\bin" folder:
 [baksmali](https://smali.googlecode.com/files/baksmali-1.4.0.jar),
 [smali](https://smali.googlecode.com/files/smali-1.4.0.jar),
+[unix2dos](http://www.efgh.com/software/unix2dos.exe)
 
 ### Extract and decompile the jars
 Export VER to match the platform you're targetting (1.2.0 or 1.1.5)
@@ -257,6 +258,8 @@ Export VER to match the platform you're targetting (1.2.0 or 1.1.5)
     git add *
     git commit -m "Initial commit"
     git tag -a base -m "Original source"
+    ..\..\..\bin\patch -p2 < ..\..\..\..\patches\%VER%\android.policy.patch
+    git add *
     cd ..\..\..
 
     adb pull /system/framework/services.jar jar/%VER%/services.orig.jar
@@ -267,6 +270,8 @@ Export VER to match the platform you're targetting (1.2.0 or 1.1.5)
     git add *
     git commit -m "Initial commit"
     git tag -a base -m "Original source"
+    ..\..\..\bin\patch -p2 < ..\..\..\..\patches\%VER%\services.patch
+    git add *
     cd ..\..\..
 
 

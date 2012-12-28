@@ -17,6 +17,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.text.DynamicLayout;
@@ -27,13 +28,14 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ModUtils {
   
-  private static final String VERSION          = "0.3.0";
+  private static final String VERSION          = "0.3.0rd";
   private static final String TAG              = "NookMod";
   
   /* 1.2.0 constants */
@@ -328,6 +330,16 @@ public class ModUtils {
     else if (action.equals("GLOWLIGHT"))
       return doToggleGlowlight(context);
 
+    else if (action.startsWith("TAP:")) {
+      new Thread(new Runnable() {
+        public void run() {
+          String[] poz = action.substring("TAP:".length()).split(";");
+          doTap(context, Integer.parseInt( poz[0] ), Integer.parseInt( poz[1] ) );
+        }
+      }).start();
+      return true;
+    }
+    
     Log.v(TAG, "doAction() unknown action: " + action);
     return false;
   }
@@ -435,6 +447,32 @@ public class ModUtils {
       return false;
     }
       return true;
+  }
+  
+  private static boolean doTap(Context context, int pozx, int pozy) {
+    if(pozx < 0 || pozy < 0)
+      return false;
+
+    Object windowman;
+    IBinder wmbinder;
+    Method injectPointerEvent;
+
+    try {
+      // wmbinder = ServiceManager.getService("window");
+      wmbinder = (IBinder)Class.forName("android.os.ServiceManager").getMethod("getService", String.class).invoke(null, "window");
+      // windowman = IWindowManager.Stub.asInterface( wmbinder );
+      windowman = Class.forName("android.view.IWindowManager$Stub").getMethod("asInterface", IBinder.class).invoke(null, wmbinder);
+      injectPointerEvent = Class.forName("android.view.IWindowManager").getMethod("injectPointerEvent", MotionEvent.class, boolean.class);
+
+      injectPointerEvent.invoke(windowman, MotionEvent.obtain(SystemClock.uptimeMillis(),SystemClock.uptimeMillis(),MotionEvent.ACTION_DOWN,pozx, pozy, 0), false);
+      injectPointerEvent.invoke(windowman, MotionEvent.obtain(SystemClock.uptimeMillis(),SystemClock.uptimeMillis(),MotionEvent.ACTION_UP,pozx, pozy, 0), false);
+    } catch (Exception e) {
+      Log.v(TAG, "doTap failed");
+      return false;
+    }
+
+    //Log.v(TAG, "doTap complete");
+    return true;
   }
   
 }

@@ -14,7 +14,9 @@ java -jar "%BAKSMALI%" "%CLASSES_DEX%" -output "%MAINDIR%\modutils"
 if errorlevel 1 goto err
 
 echo "inserting modutils into package sources"
-copy "%MAINDIR%\modutils\com\android\internal\policy\impl\ModUtils.smali" "%MAINDIR%\smali\%VER%\android.policy\com\android\internal\policy\impl"
+del "%MAINDIR%\smali\%VER%\android.policy\com\android\internal\policy\impl\ModUtils*.smali"
+copy "%MAINDIR%\modutils\com\android\internal\policy\impl\ModUtils*.smali" "%MAINDIR%\smali\%VER%\android.policy\com\android\internal\policy\impl"
+del "%MAINDIR%\smali\%VER%\services\com\android\server\status\ModUtils*.smali"
 copy "%MAINDIR%\modutils\com\android\server\status\ModUtils*.smali"       "%MAINDIR%\smali\%VER%\services\com\android\server\status"
 
 
