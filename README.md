@@ -20,7 +20,7 @@ download and save the following files to the nookmods folder:
 
 Download and save the appropriate patches to the nookmods folder.
 
-For system 1.2.0, use [android.policy.patch](https://github.com/doozan/NookTouchPatches/raw/master/patches/1.2.0/android.policy.patch) and
+For system 1.2.0 and 1.2.1, use [android.policy.patch](https://github.com/doozan/NookTouchPatches/raw/master/patches/1.2.0/android.policy.patch) and
 [services.patch](https://github.com/doozan/NookTouchPatches/raw/master/patches/1.2.0/services.patch)
 
 For system 1.1.5, use [android.policy.patch](https://github.com/doozan/NookTouchPatches/raw/master/patches/1.1.5/android.policy.patch) and
@@ -65,7 +65,7 @@ Installation
     adb push services.jar /system/framework/
     adb reboot
 
-After your nook reboots, you can install the [Nook Touch Mod Manager](https://github.com/doozan/NookTouchModManager/downloads) to configure the mods.
+After your nook reboots, you can install the [Nook Touch Mod Manager](http://download.doozan.com/nook/NookTouchModManager-0.4.0.apk) to configure the mods.
 
 
 Output from the above commands
