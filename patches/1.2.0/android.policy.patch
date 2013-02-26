@@ -7,28 +7,30 @@ index 0000000..7664704
 +*.bak
 \ No newline at end of file
 diff --git a/android.policy/com/android/internal/policy/impl/LockScreen.smali b/android.policy/com/android/internal/policy/impl/LockScreen.smali
-index b7f7e46..32d9d26 100644
+index b7f7e46..d471e36 100644
 --- a/android.policy/com/android/internal/policy/impl/LockScreen.smali
 +++ b/android.policy/com/android/internal/policy/impl/LockScreen.smali
-@@ -46,6 +46,7 @@
- 
- .field private mSelector:Lcom/android/internal/widget/LeftSlidingTab;
- 
-+.field private mSecondResume:Z
- 
- # direct methods
- .method static constructor <clinit>()V
-@@ -847,6 +848,54 @@
+@@ -847,6 +847,66 @@
      .registers 6
  
      .prologue
++
++
 +### Mod Start
 +###
-+### onResume gets called twice, once to setup the screensaver
-+### and once to wait for the unlock trigger.  We need to let the
-+### first call pass through and unlock on the second call
++### When the system is first booted, onResume is called once just
++### to display the lockscreen and wait for the unlock.
 +###
-+### if ( ! mSecondResume )
++### When sleeping, onResume gets called twice:
++### first to set up the screensaver
++### and then to display the lockscreen and wait for the unlock.
++###
++### We can distinguish between a call to setup the screensaver
++### and a call to display the lockscreen by calling
++### KeyguardManager->inKeyguardRestrictedInputMode
++### Thanks to antsm on xda-developers for posting this technique
++###
++### if ( ! KeyguardManager->inKeyguardRestrictedInputMode )
 +###   ModUtils.onScreenSleep(mContext);
 +### else {
 +###   ModUtils.onScreenResume(mContext);
@@ -37,16 +39,23 @@ index b7f7e46..32d9d26 100644
 +###     return;
 +###   }
 +### }
-+### mSecondResume = 1;
 +###
 +
-+    iget-boolean v1, p0, Lcom/android/internal/policy/impl/LockScreen;->mSecondResume:Z
++    iget-object v1, p0, Lcom/android/internal/policy/impl/LockScreen;->mContext:Landroid/content/Context;
++    const-string v2, "keyguard"
++    invoke-virtual {v1, v2}, Landroid/content/Context;->getSystemService(Ljava/lang/String;)Ljava/lang/Object;
++    move-result-object v1
++
++    check-cast v1, Landroid/app/KeyguardManager;
++    invoke-virtual {v1}, Landroid/app/KeyguardManager;->inKeyguardRestrictedInputMode()Z
++    move-result v1
++
 +    if-nez v1, :cond_ModElse
 +
 +    iget-object v1, p0, Lcom/android/internal/policy/impl/LockScreen;->mContext:Landroid/content/Context;
 +    invoke-static {v1}, Lcom/android/server/status/ModUtils;->onScreenSleep(Landroid/content/Context;)V
 +
-+    goto :cond_ModEndIf
++    goto :cond_ModEnd
 +    :cond_ModElse
 +
 +    iget-object v1, p0, Lcom/android/internal/policy/impl/LockScreen;->mContext:Landroid/content/Context;
@@ -54,19 +63,14 @@ index b7f7e46..32d9d26 100644
 +
 +    invoke-static {v1}, Lcom/android/server/status/ModUtils;->disableDragToUnlock(Landroid/content/Context;)Z
 +    move-result v1
-+    if-eqz v1, :cond_NoMod
++    if-eqz v1, :cond_ModEnd
 +
 +    iget-object v1, p0, Lcom/android/internal/policy/impl/LockScreen;->mCallback:Lcom/android/internal/policy/impl/KeyguardScreenCallback;
 +    invoke-interface {v1}, Lcom/android/internal/policy/impl/KeyguardScreenCallback;->goToUnlockScreen()V
 +
-+	  return-void
++    return-void
 +
-+	  :cond_ModEndIf
-+
-+    const/4 v1, 0x1
-+    iput-boolean v1, p0, Lcom/android/internal/policy/impl/LockScreen;->mSecondResume:Z
-+
-+    :cond_NoMod
++    :cond_ModEnd
 +
 +### Mod End
 +

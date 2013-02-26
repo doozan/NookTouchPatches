@@ -7,7 +7,7 @@ import android.util.Log;
 
 public class ModUtils {
   
-  private static final String VERSION          = "0.2.0";
+  private static final String VERSION          = "0.2.1";
   private static final String TAG              = "NookMod";
   
   private static volatile com.android.internal.policy.impl.PhoneWindowManager mContext;
