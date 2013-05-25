@@ -156,7 +156,7 @@ index 4817821..b4f42b9 100644
 +###
 +###   If the shop button is overloaded, don't update the "in store" icon
 +###
-+    iget-object v0, p0, Lcom/android/server/status/StatusBarService;->mContext:Landroid/content/Context;
++    iget-object v0, p0, Lcom/android/server/status/BNGossamerQuickNavbar;->ctx:Landroid/content/Context;
 +    invoke-static {v0}, Lcom/android/server/status/ModUtils;->overrideShopButton(Landroid/content/Context;)Z
 +
 +    move-result v0
