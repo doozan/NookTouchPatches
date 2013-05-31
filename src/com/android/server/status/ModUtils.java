@@ -35,7 +35,7 @@ import android.widget.TextView;
 
 public class ModUtils {
   
-  private static final String VERSION          = "0.4.0";
+  private static final String VERSION          = "0.4.1";
   private static final String TAG              = "NookMod";
   
   /* 1.2.0 constants */

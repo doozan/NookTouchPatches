@@ -352,10 +352,10 @@ index 0000000..c7f829c
 +.end method
 diff --git a/services/com/android/server/status/ModUtils.smali b/services/com/android/server/status/ModUtils.smali
 new file mode 100644
-index 0000000..e962cfb
+index 0000000..75475d5
 --- /dev/null
 +++ b/services/com/android/server/status/ModUtils.smali
-@@ -0,0 +1,2396 @@
+@@ -0,0 +1,2388 @@
 +.class public Lcom/android/server/status/ModUtils;
 +.super Ljava/lang/Object;
 +.source "ModUtils.java"
@@ -386,7 +386,7 @@ index 0000000..e962cfb
 +
 +.field private static final TAG:Ljava/lang/String; = "NookMod"
 +
-+.field private static final VERSION:Ljava/lang/String; = "0.4.0"
++.field private static final VERSION:Ljava/lang/String; = "0.4.1"
 +
 +
 +# direct methods
@@ -2123,7 +2123,7 @@ index 0000000..e962cfb
 +
 +    .prologue
 +    .line 68
-+    const-string v0, "0.4.0"
++    const-string v0, "0.4.1"
 +
 +    return-object v0
 +.end method
@@ -2224,7 +2224,7 @@ index 0000000..e962cfb
 +    goto :goto_17
 +.end method
 +
-+.method public static overrideShopButton(Landroid/content/Context;)Ljava/lang/Boolean;
++.method public static overrideShopButton(Landroid/content/Context;)Z
 +    .registers 2
 +    .parameter "context"
 +
@@ -2236,25 +2236,17 @@ index 0000000..e962cfb
 +
 +    move-result-object v0
 +
-+    if-eqz v0, :cond_e
++    if-eqz v0, :cond_a
 +
 +    const/4 v0, 0x1
 +
-+    invoke-static {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
++    :goto_9
++    return v0
 +
-+    move-result-object v0
-+
-+    :goto_d
-+    return-object v0
-+
-+    :cond_e
++    :cond_a
 +    const/4 v0, 0x0
 +
-+    invoke-static {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
-+
-+    move-result-object v0
-+
-+    goto :goto_d
++    goto :goto_9
 +.end method
 +
 +.method public static replaceQuicknavIcon(Landroid/content/Context;Landroid/widget/ImageView;)V
