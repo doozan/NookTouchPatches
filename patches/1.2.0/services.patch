@@ -58,7 +58,7 @@ index f9559d6..b8081c6 100644
      move-object/from16 v0, v17
  
 diff --git a/services/com/android/server/status/BNGossamerQuickNavbar.smali b/services/com/android/server/status/BNGossamerQuickNavbar.smali
-index 4817821..b4f42b9 100644
+index 4817821..fcad73f 100644
 --- a/services/com/android/server/status/BNGossamerQuickNavbar.smali
 +++ b/services/com/android/server/status/BNGossamerQuickNavbar.smali
 @@ -621,6 +621,13 @@
@@ -156,7 +156,7 @@ index 4817821..b4f42b9 100644
 +###
 +###   If the shop button is overloaded, don't update the "in store" icon
 +###
-+    iget-object v0, p0, Lcom/android/server/status/StatusBarService;->mContext:Landroid/content/Context;
++    iget-object v0, p0, Lcom/android/server/status/BNGossamerQuickNavbar;->ctx:Landroid/content/Context;
 +    invoke-static {v0}, Lcom/android/server/status/ModUtils;->overrideShopButton(Landroid/content/Context;)Z
 +
 +    move-result v0

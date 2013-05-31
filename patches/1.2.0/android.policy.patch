@@ -181,7 +181,7 @@ index 0000000..da1a4b3
 +.end method
 diff --git a/android.policy/com/android/internal/policy/impl/ModUtils.smali b/android.policy/com/android/internal/policy/impl/ModUtils.smali
 new file mode 100644
-index 0000000..23f8010
+index 0000000..15d5e5c
 --- /dev/null
 +++ b/android.policy/com/android/internal/policy/impl/ModUtils.smali
 @@ -0,0 +1,578 @@
@@ -201,7 +201,7 @@ index 0000000..23f8010
 +# static fields
 +.field private static final TAG:Ljava/lang/String; = "NookMod"
 +
-+.field private static final VERSION:Ljava/lang/String; = "0.2.0"
++.field private static final VERSION:Ljava/lang/String; = "0.2.1"
 +
 +.field private static volatile keys:[Lcom/android/internal/policy/impl/ModUtils$Keyinfo;
 +
@@ -315,7 +315,7 @@ index 0000000..23f8010
 +
 +    .prologue
 +    .line 44
-+    const-string v0, "0.2.0"
++    const-string v0, "0.2.1"
 +
 +    return-object v0
 +.end method

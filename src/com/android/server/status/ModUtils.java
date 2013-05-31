@@ -168,7 +168,7 @@ public class ModUtils {
     }
   }
 
-  public static Boolean overrideShopButton(Context context)
+  public static boolean overrideShopButton(Context context)
   {
     return ( getButtonBitmap(context, "QUICKNAV_SHOP") != null);
   }
